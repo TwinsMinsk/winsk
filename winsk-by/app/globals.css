@@ -1,0 +1,188 @@
+@import 'tailwindcss';
+@source "../src";
+@source "../app";
+@plugin "@tailwindcss/typography";
+/* ============================================
+   WINSK.BY — FORCED DARK MODE
+   Terminal / Cyberpunk Design System
+   ============================================ */
+
+@theme {
+  /* === Typography === */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* === Color Palette (Dark Mode Only) === */
+  --color-bg-primary: #0A0E1A;
+  --color-bg-secondary: #111827;
+  --color-bg-elevated: #1E293B;
+  --color-bg-glass: rgba(255, 255, 255, 0.05);
+
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #475569;
+
+  --color-accent: #7C3AED;
+  --color-accent-glow: #A78BFA;
+  --color-accent-blue: #2563EB;
+  --color-success: #10B981;
+  --color-border: rgba(148, 163, 184, 0.12);
+
+  /* === Terminal Colors === */
+  --color-terminal-green: #22C55E;
+  --color-terminal-prompt: #A78BFA;
+  --color-terminal-cursor: #F8FAFC;
+
+  /* === Spacing === */
+  --spacing-section: 5rem;
+  --container-max: 1280px;
+}
+
+/* === Base Reset (Handled by Tailwind but fine to add specific body/html resets) === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Force dark mode at the root level */
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* === Selection Color === */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}
+
+/* === Terminal Keyframes === */
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes glitch-bar-1 {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  20% {
+    transform: translateX(-3px);
+    opacity: 0.7;
+  }
+
+  40% {
+    transform: translateX(3px);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-bar-2 {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  30% {
+    transform: translateX(5px);
+    opacity: 0.6;
+  }
+
+  60% {
+    transform: translateX(-2px);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+/* === Utility Classes === */
+
+/* Terminal prefix */
+.terminal-prefix::before {
+  content: '> ';
+  color: var(--color-terminal-green);
+  font-family: var(--font-mono);
+}
+
+/* Cursor blink */
+.cursor-blink {
+  animation: blink 800ms step-end infinite;
+}
+
+/* Glass card */
+.glass-card {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+/* Gradient accent */
+.gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-blue));
+}
+
+/* Glow text */
+.glow-text {
+  text-shadow: 0 0 20px var(--color-accent-glow);
+}
+
+/* Section divider */
+.divider {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}

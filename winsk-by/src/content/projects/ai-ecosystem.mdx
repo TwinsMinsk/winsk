@@ -1,0 +1,32 @@
+## Бизнес-задача
+
+Полностью автоматизировать рутину стоковых фотографов и контент-мейкеров — от исследования рынка до массовой выгрузки визуального контента с AI.
+
+## Компоненты Экосистемы
+
+- **IQStocker Bot** (Telegram Bot + Web Admin)
+- **IQStocker Generating** (Web App + Chrome Extension)
+- **Adobe Scrapper** (Desktop-утилита)
+- **GPT-4 Vision Pipeline** (CLI-сервис)
+
+## Техническая реализация
+
+<SolutionsTable data='[{"task": "Мультимодельный AI", "solution": "GPT-4, Claude и Gemini в одном абстракшене", "complexity": "Unified response format"}, {"task": "Batch API", "solution": "Асинхронный сбор в .jsonl для OpenAI", "complexity": "Оркестрация и опрос статусов"}, {"task": "EXIF/Metadata", "solution": "AI -> EXIF инжект через ExifTool/ffmpeg", "complexity": "Binary-level writing"}]' />
+
+## Архитектура
+
+<ArchDiagram src="/images/projects/ai-ecosystem/arch.svg" />
+
+## Фрагменты кода
+
+<CodeSnippet
+  language="python"
+  filename="llm_service.py"
+  code="async def get_completions(prompt: str, provider='openai'):\n    if provider == 'openai': return await _openai_call(prompt)\n    elif provider == 'anthropic': return await _anthropic_call(prompt)\n    return await _gemini_call(prompt)"
+/>
+
+## Скриншоты
+
+<Screenshots images='[{"src": "/images/projects/ai-ecosystem/bot.webp", "alt": "Телеграм бот"}, {"src": "/images/projects/ai-ecosystem/app.webp", "alt": "Web приложение"}]' />
+
+<CaseCTA />

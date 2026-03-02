@@ -1,0 +1,25 @@
+## Бизнес-задача
+
+Устранить хаос в операционных процессах мебельной фабрики, обеспечив «прозрачность» на всех этапах: от поступления лида до контроля остатков на складе и расчета маржинальности заказов. Мебельное производство управлялось через таблицы и мессенджеры — это приводило к потере лидов и невозможности рассчитать маржинальность.
+
+## Техническая реализация
+
+<SolutionsTable data='[{"task": "CRM-модуль", "solution": "Управление лидами, контактами, компаниями c Tilda", "complexity": "Вебхуки + CRM-логика"}, {"task": "Канбан производства", "solution": "Drag-and-drop интерфейс стадий заказов", "complexity": "Many-to-many связи"}, {"task": "Финансовая аналитика", "solution": "Автоматический расчёт KPI и маржи", "complexity": "SQL-функции на уровне БД"}, {"task": "Ролевая модель", "solution": "Админ, менеджер, кладовщик", "complexity": "Row Level Security (RLS)"}]' />
+
+## Архитектура
+
+<ArchDiagram src="/images/projects/erp-lomuebles/arch.svg" />
+
+## Фрагменты кода
+
+<CodeSnippet
+  language="sql"
+  filename="rpc_calculate_margin.sql"
+  code="CREATE OR REPLACE FUNCTION calculate_margin(order_id UUID) RETURNS DECIMAL AS $$\nDECLARE total_revenue DECIMAL; total_cost DECIMAL;\nBEGIN\n  -- Logic to aggregate costs\n  RETURN total_revenue - total_cost;\nEND;\n$$ LANGUAGE plpgsql SECURITY DEFINER;"
+/>
+
+## Скриншоты
+
+<Screenshots images='[{"src": "/images/projects/erp-lomuebles/kanban.webp", "alt": "Канбан-доска"}, {"src": "/images/projects/erp-lomuebles/finance.webp", "alt": "Дашборд аналитики"}]' />
+
+<CaseCTA />

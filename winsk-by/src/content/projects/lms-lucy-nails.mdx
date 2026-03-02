@@ -1,0 +1,21 @@
+## Бизнес-задача
+
+Требовалось создать надежную площадку для инфобизнеса, которая автоматизирует продажу курсов, защитит видео от пиратства и предоставит удобный личный кабинет для студентов с доступом через Telegram.
+
+## Техническая реализация
+
+<SolutionsTable data='[{"task": "Защита видеоконтента", "solution": "Интеграция с Kinescope API", "complexity": "DRM-защита"}, {"task": "Безшовная авторизация", "solution": "Telegram Login Widget", "complexity": "OAuth 2.0 / TG ID"}, {"task": "Управление контентом", "solution": "3-уровневая иерархия курсов", "complexity": "ACL-модель"}, {"task": "Прогресс студента", "solution": "Серверный трекинг уроков", "complexity": "% завершения"}, {"task": "Аналитика продаж", "solution": "Дашборд с метриками", "complexity": "Fin-analytics"}]' />
+
+## Фрагменты кода
+
+<CodeSnippet
+  language="python"
+  filename="main.py"
+  code="from fastapi import FastAPI, Depends, HTTPException\n\ndef verify_telegram_hash(user_hash: str):\n    if not user_hash: raise HTTPException(status_code=401, detail='Unauthorized')\n    return user_id"
+/>
+
+## Скриншоты
+
+<Screenshots images='[{"src": "/images/projects/lms-lucy-nails/dashboard.webp", "alt": "Дашборд Студента"}, {"src": "/images/projects/lms-lucy-nails/admin.webp", "alt": "Панель управления курсами"}]' />
+
+<CaseCTA />
