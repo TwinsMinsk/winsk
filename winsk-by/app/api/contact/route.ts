@@ -11,6 +11,9 @@ export async function POST(request: Request) {
             name: formData.get('name'),
             contact: formData.get('contact'),
             type: formData.get('type'),
+            budget: formData.get('budget'),
+            timeline: formData.get('timeline'),
+            source: formData.get('source'),
             message: formData.get('message'),
         };
 
@@ -23,14 +26,22 @@ export async function POST(request: Request) {
             consult: '💡 Консультация',
         };
 
+        const escapeHtml = (text: string) => {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        };
+
         const text = `
-📩 *Новая заявка с Winsk.by*
+<b>📩 Новая заявка с Winsk.by</b>
 ━━━━━━━━━━━━━━━━━━━━━
-*Тип:* ${typeLabels[data.type]}
-*Имя:* ${data.name}
-*Контакт:* ${data.contact}
-*Сообщение:*
-${data.message}
+<b>Тип:</b> ${typeLabels[data.type]}
+<b>Имя:</b> ${escapeHtml(data.name)}
+<b>Контакт:</b> ${escapeHtml(data.contact)}
+${data.budget ? `<b>Бюджет:</b> ${escapeHtml(data.budget)}\n` : ''}${data.timeline ? `<b>Сроки:</b> ${escapeHtml(data.timeline)}\n` : ''}${data.source ? `<b>Откуда узнали:</b> ${escapeHtml(data.source)}\n` : ''}<b>Сообщение:</b>
+${escapeHtml(data.message)}
         `.trim();
 
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -49,7 +60,7 @@ ${data.message}
             tgFormData.append('chat_id', chatId);
             tgFormData.append('document', file);
             tgFormData.append('caption', text);
-            tgFormData.append('parse_mode', 'Markdown');
+            tgFormData.append('parse_mode', 'HTML');
 
             response = await fetch(
                 `https://api.telegram.org/bot${botToken}/sendDocument`,
@@ -68,7 +79,7 @@ ${data.message}
                     body: JSON.stringify({
                         chat_id: chatId,
                         text,
-                        parse_mode: 'Markdown',
+                        parse_mode: 'HTML',
                     }),
                 }
             );

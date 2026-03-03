@@ -51,6 +51,9 @@ export function ContactForm() {
             formData.append('contact', data.contact);
             formData.append('type', data.type);
             formData.append('message', data.message);
+            if (data.budget) formData.append('budget', data.budget);
+            if (data.timeline) formData.append('timeline', data.timeline);
+            if (data.source) formData.append('source', data.source);
             if (selectedFile) {
                 formData.append('file', selectedFile);
             }
@@ -147,8 +150,43 @@ export function ContactForm() {
                             {errors.type && <p className="text-red-400 text-xs font-mono mt-1">{errors.type.message}</p>}
                         </div>
 
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-sm text-[var(--color-text-secondary)] font-mono">4. Примерный бюджет (необязательно)</label>
+                                <input
+                                    {...register('budget')}
+                                    disabled={isSubmitting}
+                                    placeholder="до $5000 / не определен"
+                                    className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-3 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+                                />
+                                {errors.budget && <p className="text-red-400 text-xs font-mono mt-1">{errors.budget.message}</p>}
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="block text-sm text-[var(--color-text-secondary)] font-mono">5. Желаемые сроки (необязательно)</label>
+                                <input
+                                    {...register('timeline')}
+                                    disabled={isSubmitting}
+                                    placeholder="1-2 месяца / срочно"
+                                    className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-3 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+                                />
+                                {errors.timeline && <p className="text-red-400 text-xs font-mono mt-1">{errors.timeline.message}</p>}
+                            </div>
+                        </div>
+
                         <div className="space-y-2">
-                            <label className="block text-sm text-[var(--color-text-secondary)] font-mono">4. Опишите задачу</label>
+                            <label className="block text-sm text-[var(--color-text-secondary)] font-mono">6. Откуда вы обо мне узнали? (необязательно)</label>
+                            <input
+                                {...register('source')}
+                                disabled={isSubmitting}
+                                placeholder="Awwwards, рекомендация, LinkedIn..."
+                                className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-3 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+                            />
+                            {errors.source && <p className="text-red-400 text-xs font-mono mt-1">{errors.source.message}</p>}
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-sm text-[var(--color-text-secondary)] font-mono">7. Опишите задачу</label>
                             <div className="relative">
                                 <textarea
                                     {...register('message')}
