@@ -8,16 +8,12 @@ export function Footer() {
                     &copy; {year} Winsk.by. All rights reserved.
                 </p>
                 <div className="flex items-center space-x-4 mt-4 md:mt-0 font-mono">
-                    <a href="https://github.com/winsk" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent-glow)] transition-colors">
-                        GitHub
-                    </a>
-                    <span>//</span>
-                    <a href="https://linkedin.com/in/winsk" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent-glow)] transition-colors">
-                        LinkedIn
-                    </a>
-                    <span>//</span>
-                    <a href="https://t.me/winsk" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent-glow)] transition-colors">
+                    <a href="https://t.me/oleg_smirniy" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent-glow)] transition-colors">
                         Telegram
+                    </a>
+                    <span>//</span>
+                    <a href="https://wa.me/375333231447" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent-glow)] transition-colors">
+                        WhatsApp
                     </a>
                 </div>
             </div>

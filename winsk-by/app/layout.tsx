@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
+import { NeuralCursor } from '@/components/ui/NeuralCursor';
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -43,11 +42,9 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
-        <Navbar />
-        <div className="flex-grow pt-16">
-          {children}
-        </div>
-        <Footer />
+        <NeuralCursor />
+        <div className="film-grain"></div>
+        {children}
       </body>
     </html>
   );

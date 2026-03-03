@@ -1,19 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contactSchema, type ContactFormData } from '@/types/contact';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Paperclip, X } from 'lucide-react';
 
 export function ContactForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {
         register,
         handleSubmit,
         reset,
+        setValue,
         formState: { errors }
     } = useForm<ContactFormData>({
         resolver: zodResolver(contactSchema),
@@ -22,17 +26,42 @@ export function ContactForm() {
         }
     });
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            setValue('file', file);
+        }
+    };
+
+    const removeFile = () => {
+        setSelectedFile(null);
+        setValue('file', undefined);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     const onSubmit = async (data: ContactFormData) => {
         setIsSubmitting(true);
         setStatus('idle');
         try {
+            const formData = new FormData();
+            formData.append('name', data.name);
+            formData.append('contact', data.contact);
+            formData.append('type', data.type);
+            formData.append('message', data.message);
+            if (selectedFile) {
+                formData.append('file', selectedFile);
+            }
+
             const res = await fetch('/api/contact', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: formData,
             });
             if (!res.ok) throw new Error('API Error');
             setStatus('success');
+            setSelectedFile(null);
             reset();
         } catch (e) {
             console.error('Error submitting form:', e);
@@ -110,7 +139,7 @@ export function ContactForm() {
                                             disabled={isSubmitting}
                                         />
                                         <div className="text-center px-2 py-3 border border-[var(--color-border)] rounded-lg cursor-pointer peer-checked:border-[var(--color-accent)] peer-checked:bg-[var(--color-accent)]/10 peer-checked:text-[var(--color-accent-glow)] transition-all font-mono text-xs md:text-sm text-[var(--color-text-secondary)]">
-                                            {type === 'project' ? 'Разработка' : type === 'consult' ? 'Консалтинг' : 'К работе'}
+                                            {type === 'project' ? 'Разработка' : type === 'consult' ? 'Консалтинг' : 'Сотрудничество'}
                                         </div>
                                     </label>
                                 ))}
@@ -120,13 +149,50 @@ export function ContactForm() {
 
                         <div className="space-y-2">
                             <label className="block text-sm text-[var(--color-text-secondary)] font-mono">4. Опишите задачу</label>
-                            <textarea
-                                {...register('message')}
-                                disabled={isSubmitting}
-                                rows={4}
-                                placeholder="Чем я могу помочь?"
-                                className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-3 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] transition-colors resize-none"
-                            />
+                            <div className="relative">
+                                <textarea
+                                    {...register('message')}
+                                    disabled={isSubmitting}
+                                    rows={4}
+                                    placeholder="Чем я могу помочь?"
+                                    className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-3 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] transition-colors resize-none pr-12"
+                                />
+
+                                <div className="absolute right-3 bottom-3 flex items-center gap-2">
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                        id="file-upload"
+                                    />
+                                    <label
+                                        htmlFor="file-upload"
+                                        className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glow)] cursor-pointer transition-colors"
+                                        title="Прикрепить файл"
+                                    >
+                                        <Paperclip size={20} />
+                                    </label>
+                                </div>
+                            </div>
+
+                            {selectedFile && (
+                                <div className="flex items-center justify-between px-3 py-2 bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg text-xs font-mono text-[var(--color-text-secondary)]">
+                                    <div className="flex items-center gap-2 overflow-hidden">
+                                        <Paperclip size={14} className="shrink-0" />
+                                        <span className="truncate">{selectedFile.name}</span>
+                                        <span className="opacity-50 shrink-0">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={removeFile}
+                                        className="p-1 hover:text-red-400 transition-colors"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                            )}
+
                             {errors.message && <p className="text-red-400 text-xs font-mono mt-1">{errors.message.message}</p>}
                         </div>
 
@@ -142,7 +208,7 @@ export function ContactForm() {
                             className="w-full bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] font-bold py-4 rounded-lg hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                         >
                             <span className="relative z-10 flex items-center justify-center font-mono">
-                                {isSubmitting ? 'Sending...' : 'Инициировать рукопожатие →'}
+                                {isSubmitting ? 'Отправка...' : 'Отправить запрос →'}
                             </span>
                         </button>
                     </motion.form>

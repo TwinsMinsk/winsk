@@ -1,8 +1,8 @@
 // Time: O(n) for render, Space: O(1)
 "use client";
 
-import { motion, Variants, useMotionValue, useMotionTemplate } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import { motion, Variants, useMotionValue, useMotionTemplate, useScroll, useTransform } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
 import { Laptop, Server, Database } from "lucide-react";
 
 const containerVariants: Variants = {
@@ -38,7 +38,7 @@ interface SkillCardProps {
     children?: React.ReactNode;
 }
 
-function SkillCard({ title, description, tags, className, accentColor = "var(--color-accent)", children }: SkillCardProps) {
+function SkillCard({ title, description, tags, className, accentColor = "var(--color-accent)", children, index = 0 }: SkillCardProps & { index?: number }) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -48,19 +48,21 @@ function SkillCard({ title, description, tags, className, accentColor = "var(--c
         mouseY.set(clientY - top);
     }
 
+    function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+        if (!e.touches[0]) return;
+        const { left, top } = e.currentTarget.getBoundingClientRect();
+        mouseX.set(e.touches[0].clientX - left);
+        mouseY.set(e.touches[0].clientY - top);
+    }
+
     return (
         <motion.div
             variants={itemVariants}
             onMouseMove={handleMouseMove}
+            onTouchMove={handleTouchMove}
+            onTouchStart={handleTouchMove}
             whileHover={{ scale: 1.01, y: -5 }}
-            className={`group relative p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 rounded-xl hover:shadow-2xl ${className}`}
-            style={{
-                background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)"
-            }}
+            className={`bento-glass-card group relative p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 rounded-xl hover:shadow-2xl ${className}`}
         >
             {/* Spotlight Effect */}
             <motion.div
@@ -121,7 +123,7 @@ function SkillCard({ title, description, tags, className, accentColor = "var(--c
 
 function ArchitectureVisualizer() {
     return (
-        <div className="mt-6 h-28 relative rounded-lg border border-white/5 bg-black/40 overflow-hidden flex items-center justify-between px-2 md:px-8 shadow-inner">
+        <div className="mt-6 h-28 relative rounded-lg border border-white/5 bg-black/40 overflow-hidden flex items-center justify-between px-2 md:px-8 shadow-inner" aria-hidden="true">
             {/* Grid background */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:12px_12px]" />
 
@@ -192,7 +194,7 @@ function MiniTerminal() {
     ];
 
     return (
-        <div className="mt-6 p-4 rounded-lg bg-black/60 border border-white/5 font-mono text-xs md:text-sm overflow-hidden shadow-inner ring-1 ring-white/5">
+        <div className="mt-6 p-4 rounded-lg bg-black/60 border border-white/5 font-mono text-xs md:text-sm overflow-hidden shadow-inner ring-1 ring-white/5" aria-hidden="true">
             <div className="flex gap-1.5 mb-3 opacity-50">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-400/60" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" />
@@ -225,8 +227,20 @@ function MiniTerminal() {
 }
 
 export function BentoSkills() {
+    const containerRef = useRef<HTMLElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    // Parallax logic: each card moves slightly differently
+    const y1 = useTransform(scrollYProgress, [0, 1], [40, -40]);
+    const y2 = useTransform(scrollYProgress, [0, 1], [80, -80]);
+    const y3 = useTransform(scrollYProgress, [0, 1], [20, -20]);
+    const y4 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+
     return (
-        <section className="py-24 px-6 md:px-12 max-w-[var(--container-max)] mx-auto w-full overflow-hidden">
+        <section ref={containerRef} className="py-24 px-6 md:px-12 max-w-[var(--container-max)] mx-auto w-full overflow-hidden">
             <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -234,7 +248,7 @@ export function BentoSkills() {
                 className="mb-12"
             >
                 <h2 className="text-3xl md:text-4xl font-bold font-mono text-[var(--color-text-primary)] mb-4 tracking-tight">
-                    <span className="text-[var(--color-terminal-green)] mr-2">{">"}</span> System.Profile_
+                    <span className="text-[var(--color-terminal-green)] mr-2">{">"}</span> Профиль_
                 </h2>
                 <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl font-mono leading-relaxed">
                     «Через 5 лет код будут писать исключительно машины. Я уже сегодня тот, кто ими управляет».
@@ -248,41 +262,49 @@ export function BentoSkills() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                <SkillCard
-                    title="Hard Skills | Архитектура и Инженерия"
-                    description="Я не просто пишу код — я проектирую системы. Мой подход основан на глубоком ресерче: я анализирую задачу и вместе с AI подбираю идеальный стек и архитектуру под бизнес-запрос."
-                    tags={["System Architecture", "Python", "API Integrations"]}
-                    className="md:col-span-2"
-                    accentColor="#7C3AED"
-                >
-                    <ArchitectureVisualizer />
-                </SkillCard>
+                <motion.div style={{ y: y1 }} className="md:col-span-2">
+                    <SkillCard
+                        title="Hard Skills | Архитектура и Инженерия"
+                        description="Я не просто пишу код — я проектирую системы. Мой подход основан на глубоком ресерче: я анализирую задачу и вместе с AI подбираю идеальный стек и архитектуру под бизнес-запрос."
+                        tags={["System Architecture", "Python", "API Integrations"]}
+                        className="h-full"
+                        accentColor="#7C3AED"
+                    >
+                        <ArchitectureVisualizer />
+                    </SkillCard>
+                </motion.div>
 
-                <SkillCard
-                    title="Digital Skills | AI-Дирижер"
-                    description="Владею передовым инструментарием AI-разработки. Мой воркфлоу — это кросс-валидация решений через разные LLM."
-                    tags={["Cursor", "Antigravity", "Claude Code"]}
-                    className="md:col-span-1"
-                    accentColor="#2563EB"
-                />
+                <motion.div style={{ y: y2 }} className="md:col-span-1">
+                    <SkillCard
+                        title="Digital Skills | AI-Дирижер"
+                        description="Владею передовым инструментарием AI-разработки. Мой воркфлоу — это кросс-валидация решений через разные LLM."
+                        tags={["Cursor", "Antigravity", "Claude Code"]}
+                        className="h-full"
+                        accentColor="#2563EB"
+                    />
+                </motion.div>
 
-                <SkillCard
-                    title="Soft Skills | Product Vision"
-                    description="Беру размытые идеи заказчика, декомпозирую их с помощью AI и возвращаюсь с четким планом."
-                    tags={["Client Communication", "Problem Solving"]}
-                    className="md:col-span-1"
-                    accentColor="#10B981"
-                />
+                <motion.div style={{ y: y3 }} className="md:col-span-1">
+                    <SkillCard
+                        title="Soft Skills | Product Vision"
+                        description="Беру размытые идеи заказчика, декомпозирую их с помощью AI и возвращаюсь с четким планом."
+                        tags={["Client Communication", "Problem Solving"]}
+                        className="h-full"
+                        accentColor="#10B981"
+                    />
+                </motion.div>
 
-                <SkillCard
-                    title="Meta Skills | Эволюция"
-                    description="Скорость изменений в AI феноменальна, и я живу в этом ритме. Непрерывный тест новых тулзов и обучение."
-                    tags={["Continuous Learning", "Adaptability"]}
-                    className="md:col-span-2"
-                    accentColor="#F1F5F9"
-                >
-                    <MiniTerminal />
-                </SkillCard>
+                <motion.div style={{ y: y4 }} className="md:col-span-2">
+                    <SkillCard
+                        title="Meta Skills | Эволюция"
+                        description="Скорость изменений в AI феноменальна, и я живу в этом ритме. Непрерывный тест новых тулзов и обучение."
+                        tags={["Continuous Learning", "Adaptability"]}
+                        className="h-full"
+                        accentColor="#F1F5F9"
+                    >
+                        <MiniTerminal />
+                    </SkillCard>
+                </motion.div>
             </motion.div>
         </section>
     );

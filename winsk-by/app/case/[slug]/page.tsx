@@ -6,6 +6,7 @@ import { mdxComponents } from '@/components/case/mdx-components';
 import { getProjectBySlug, projects } from '@/data/projects';
 import { CaseHero } from '@/components/case/CaseHero';
 import { CaseNavigation } from '@/components/case/CaseNavigation';
+import { CaseCallToAction } from '@/components/case/CaseCallToAction';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -55,6 +56,8 @@ export default async function CasePage({ params }: PageProps) {
                         options={{ parseFrontmatter: false }}
                     />
                 </div>
+
+                <CaseCallToAction />
 
                 <CaseNavigation prev={prevProject} next={nextProject} />
             </div>

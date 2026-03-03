@@ -26,7 +26,7 @@ export const projects: ProjectMeta[] = [
             { label: '', value: 'Продакшен', prefix: 'status:' },
         ],
         productionUrl: 'https://lucysmirnova.ru/',
-        thumbnail: '/images/projects/lms-lucy-nails/hero.webp',
+        thumbnail: '/images/projects/lms-lucy-nails/hero.jpg',
         order: 1,
     },
     {
@@ -50,7 +50,7 @@ export const projects: ProjectMeta[] = [
             { label: '', value: 'RLS Security', prefix: 'security:' },
             { label: 'таблиц в БД', value: '45+', prefix: 'tables:' },
         ],
-        thumbnail: '/images/projects/erp-lomuebles/hero.webp',
+        thumbnail: '/images/projects/erp-lomuebles/hero.jpg',
         order: 2,
     },
     {
@@ -74,7 +74,7 @@ export const projects: ProjectMeta[] = [
             { label: 'расходников', value: 'Автосписание', prefix: 'stock:' },
             { label: 'бэкапы', value: 'Автоматические', prefix: 'backup:' },
         ],
-        thumbnail: '/images/projects/crm-ya-i-ty/hero.webp',
+        thumbnail: '/images/projects/crm-ya-i-ty/hero.png',
         order: 3,
     },
 
@@ -102,7 +102,7 @@ export const projects: ProjectMeta[] = [
             { label: 'продуктов', value: '6', prefix: 'services:' },
         ],
         productionUrl: 'https://gen.iqstocker.com',
-        thumbnail: '/images/projects/ai-ecosystem/hero.webp',
+        thumbnail: '/images/projects/ai-ecosystem/hero.jpg',
         order: 4,
     },
 
@@ -126,7 +126,7 @@ export const projects: ProjectMeta[] = [
             { label: 'заявок', value: '+45%', prefix: 'growth:' },
         ],
         productionUrl: 'https://lomuebles.es/',
-        thumbnail: '/images/projects/site-lomuebles/hero.webp',
+        thumbnail: '/images/projects/site-lomuebles/hero.jpg',
         order: 5,
     },
     {
@@ -148,7 +148,7 @@ export const projects: ProjectMeta[] = [
             { label: 'Score', value: '95+', prefix: 'lighthouse:' },
         ],
         productionUrl: 'https://prozub.by/',
-        thumbnail: '/images/projects/prozub-by/hero.webp',
+        thumbnail: '/images/projects/prozub-by/hero.jpg',
         order: 6,
     }
 ];

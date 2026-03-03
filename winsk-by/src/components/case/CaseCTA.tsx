@@ -21,7 +21,7 @@ export function CaseCTA() {
                 </Link>
                 <span className="text-[var(--color-text-muted)] font-mono text-sm hidden sm:inline-block">or</span>
                 <a
-                    href="https://t.me/winsk"
+                    href="https://t.me/oleg_smirniy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-8 py-3 rounded-lg border border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-terminal-prompt)] transition-colors inline-block w-full sm:w-auto font-mono"

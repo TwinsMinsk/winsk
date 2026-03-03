@@ -5,6 +5,7 @@ export const contactSchema = z.object({
     contact: z.string().min(3, { message: 'Укажите email или Telegram' }).max(200),
     type: z.enum(['hire', 'project', 'consult'], { message: 'Выберите тип запроса' }),
     message: z.string().min(10, { message: 'Опишите задачу подробнее (минимум 10 символов)' }).max(2000),
+    file: z.any().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;

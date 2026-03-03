@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter } from '@/hooks/useTypewriter';
 import { useScrambleText } from '@/hooks/useScrambleText';
-import { ScanlineOverlay } from './ScanlineOverlay';
 
+// Phase: idle → typing → glitch → scrambling → resolved
 type Phase = 'idle' | 'typing' | 'glitch' | 'scrambling' | 'resolved';
 
 export function TerminalDecode() {
@@ -13,11 +13,13 @@ export function TerminalDecode() {
     const [phase, setPhase] = useState<Phase>('idle');
     const [showGlitch, setShowGlitch] = useState(false);
 
+    // Скрамбл: "Location.ID: Minsk" → "Brand.ID: Winsk"
     const scrambler = useScrambleText({
         speed: 30,
         onComplete: () => setPhase('resolved'),
     });
 
+    // Тайпрайтер первой строки
     const typewriter = useTypewriter({
         speed: 40,
         startDelay: 500,
@@ -27,48 +29,61 @@ export function TerminalDecode() {
             setTimeout(() => {
                 setShowGlitch(false);
                 setPhase('scrambling');
-                scrambler.start('Location: Minsk', 'Status: Winsk');
-            }, 1200); // Wait 1-1.5 seconds before scramble
+                scrambler.start('Location.ID: Minsk', 'Brand.ID: Winsk');
+            }, 1200);
         },
     });
 
     useEffect(() => {
         setMounted(true);
         setPhase('typing');
-        typewriter.start('> Location: Minsk');
+        typewriter.start('> Location.ID: Minsk');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!mounted) return <div className="h-[40px] md:h-[60px]" />;
+    // Итоговый текст для рендера
+    const displayText =
+        phase === 'scrambling' || phase === 'resolved'
+            ? `> ${scrambler.displayText}`
+            : typewriter.displayText;
+
+    if (!mounted) return <div className="h-[60px] md:h-[80px]" />;
 
     return (
-        <div className="relative font-mono text-3xl md:text-5xl lg:text-6xl inline-block mt-4 mb-2 font-bold select-none whitespace-nowrap">
-            {/* Glitch-bars (simplified CSS representation) */}
-            {showGlitch && (
-                <>
-                    <div className="absolute top-[30%] left-0 h-[3px] w-full bg-[var(--color-accent-glow)]/80 animate-glitch-bar-1 mix-blend-overlay" />
-                    <div className="absolute top-[60%] left-0 h-[2px] w-full bg-[var(--color-accent-blue)]/80 animate-glitch-bar-2 mix-blend-overlay" />
-                </>
-            )}
+        <div className="font-mono select-none" aria-hidden="true">
+            <div className="relative text-2xl md:text-4xl lg:text-5xl font-bold inline-block whitespace-nowrap">
 
-            {/* Main Text */}
-            <motion.span
-                className={phase === 'resolved' ? 'text-[var(--color-accent-glow)] glow-text' : 'text-[var(--color-terminal-green)]'}
-                animate={showGlitch ? { x: [0, -4, 4, 0], opacity: [1, 0.7, 1] } : {}}
-                transition={{ duration: 0.15, repeat: 2 }}
-            >
-                {phase === 'scrambling' || phase === 'resolved' ? `> ${scrambler.displayText}` : typewriter.displayText}
-            </motion.span>
+                {/* Glitch-bars во время перехода */}
+                {showGlitch && (
+                    <>
+                        <div className="absolute top-[30%] left-0 h-[3px] w-full bg-[var(--color-accent-glow)]/80 animate-glitch-bar-1 mix-blend-overlay" />
+                        <div className="absolute top-[60%] left-0 h-[2px] w-full bg-[var(--color-accent-blue)]/80 animate-glitch-bar-2 mix-blend-overlay" />
+                    </>
+                )}
 
-            {/* Blinking Cursor */}
-            <span className="cursor-blink text-current font-light">_</span>
+                {/* Основной текст */}
+                <motion.span
+                    className={
+                        phase === 'resolved'
+                            ? 'text-[var(--color-accent-glow)] glow-text'
+                            : 'text-[var(--color-terminal-green)]'
+                    }
+                    animate={showGlitch ? { x: [0, -4, 4, 0], opacity: [1, 0.7, 1] } : {}}
+                    transition={{ duration: 0.15, repeat: 2 }}
+                >
+                    {displayText}
+                </motion.span>
 
-            {/* Scanline */}
-            {phase === 'resolved' && (
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-10">
-                    <div className="w-full h-[1px] bg-[var(--color-accent-glow)]/30 shadow-[0_0_15px_3px_var(--color-accent-glow)] animate-[scanline_3s_linear_infinite]" />
-                </div>
-            )}
+                {/* Мигающий курсор */}
+                <span className="cursor-blink text-current font-light">_</span>
+
+                {/* Scanline после финального состояния */}
+                {phase === 'resolved' && (
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-10">
+                        <div className="w-full h-[1px] bg-[var(--color-accent-glow)]/30 shadow-[0_0_15px_3px_var(--color-accent-glow)] animate-[scanline_3s_linear_infinite]" />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

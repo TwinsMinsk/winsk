@@ -26,10 +26,10 @@ export function ProjectsGrid() {
                 <div>
                     <h2 className="text-3xl font-bold text-[var(--color-text-primary)] inline-flex items-center">
                         <span className="text-[var(--color-terminal-green)] mr-3 font-mono">{'//'}</span>
-                        Featured Architecture
+                        Архитектурные Решения
                     </h2>
                     <p className="text-[var(--color-text-secondary)] mt-2 font-mono text-sm">
-                        {'>'} SELECT * FROM projects WHERE status = &apos;production&apos;;
+                        Избранные кейсы: от комплексных ERP до экосистем с ИИ-агентами.
                     </p>
                 </div>
 

@@ -9,8 +9,8 @@
 
 @theme {
   /* === Typography === */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jb-mono), 'Fira Code', 'Courier New', monospace;
 
   /* === Color Palette (Dark Mode Only) === */
   --color-bg-primary: #0A0E1A;
@@ -19,8 +19,8 @@
   --color-bg-glass: rgba(255, 255, 255, 0.05);
 
   --color-text-primary: #F8FAFC;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #475569;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #64748B;
 
   --color-accent: #7C3AED;
   --color-accent-glow: #A78BFA;
@@ -170,6 +170,15 @@ body {
   border-radius: 0.75rem;
 }
 
+/* Bento Glass panel */
+.bento-glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
 /* Gradient accent */
 .gradient-accent {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-blue));
@@ -185,4 +194,17 @@ body {
   color: var(--color-text-muted);
   font-family: var(--font-mono);
   letter-spacing: 0.05em;
+}
+
+/* Film grain effect */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  will-change: transform;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

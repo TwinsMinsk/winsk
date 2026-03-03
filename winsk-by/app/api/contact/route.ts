@@ -4,8 +4,18 @@ import { z } from 'zod';
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
+        const formData = await request.formData();
+
+        // Маппинг из FormData в объект для валидации
+        const body = {
+            name: formData.get('name'),
+            contact: formData.get('contact'),
+            type: formData.get('type'),
+            message: formData.get('message'),
+        };
+
         const data = contactSchema.parse(body);
+        const file = formData.get('file') as File | null;
 
         const typeLabels = {
             hire: '👔 Найм',
@@ -21,32 +31,52 @@ export async function POST(request: Request) {
 *Контакт:* ${data.contact}
 *Сообщение:*
 ${data.message}
-    `.trim();
+        `.trim();
 
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
         const chatId = process.env.TELEGRAM_CHAT_ID;
 
         if (!botToken || !chatId) {
             console.warn('Telegram credentials are not configured in .env.local');
-            // Возвращаем успешный ответ даже если TG не настроен, чтобы не блокировать UI на этапе MVP
             return NextResponse.json({ success: true, warning: 'TG not configured' });
         }
 
-        const response = await fetch(
-            `https://api.telegram.org/bot${botToken}/sendMessage`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text,
-                    parse_mode: 'Markdown',
-                }),
-            }
-        );
+        let response;
+
+        if (file && file.size > 0) {
+            // Если есть файл, используем sendDocument
+            const tgFormData = new FormData();
+            tgFormData.append('chat_id', chatId);
+            tgFormData.append('document', file);
+            tgFormData.append('caption', text);
+            tgFormData.append('parse_mode', 'Markdown');
+
+            response = await fetch(
+                `https://api.telegram.org/bot${botToken}/sendDocument`,
+                {
+                    method: 'POST',
+                    body: tgFormData,
+                }
+            );
+        } else {
+            // Обычное текстовое сообщение
+            response = await fetch(
+                `https://api.telegram.org/bot${botToken}/sendMessage`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text,
+                        parse_mode: 'Markdown',
+                    }),
+                }
+            );
+        }
 
         if (!response.ok) {
-            console.error('Telegram API Error', await response.text());
+            const errorText = await response.text();
+            console.error('Telegram API Error', errorText);
             return NextResponse.json({ error: 'Failed to send to Telegram' }, { status: 500 });
         }
 
