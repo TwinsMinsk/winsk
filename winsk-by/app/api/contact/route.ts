@@ -8,13 +8,13 @@ export async function POST(request: Request) {
 
         // Маппинг из FormData в объект для валидации
         const body = {
-            name: formData.get('name'),
-            contact: formData.get('contact'),
-            type: formData.get('type'),
-            budget: formData.get('budget'),
-            timeline: formData.get('timeline'),
-            source: formData.get('source'),
-            message: formData.get('message'),
+            name: formData.get('name') || '',
+            contact: formData.get('contact') || '',
+            type: formData.get('type') || '',
+            budget: formData.get('budget') ?? undefined,
+            timeline: formData.get('timeline') ?? undefined,
+            source: formData.get('source') ?? undefined,
+            message: formData.get('message') || '',
         };
 
         const data = contactSchema.parse(body);
