@@ -75,7 +75,7 @@ function PhotoCardInner({ sizes }: { sizes: string }) {
             {/* Метка */}
             <div className="px-3 py-2 flex items-center justify-between">
                 <span className="font-mono text-xs text-[var(--color-terminal-green)] opacity-70">
-                    // winsk.by
+                    // Oleg Smirnov
                 </span>
                 <span className="font-mono text-xs text-[var(--color-text-muted)]">
                     AI_ENGINEER

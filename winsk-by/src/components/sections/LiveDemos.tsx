@@ -34,14 +34,18 @@ export function LiveDemos() {
 
             <div className="max-w-7xl mx-auto">
                 <div className="mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-jb-mono tracking-tight flex items-center gap-3">
-                        <span className="text-cyan-400">&gt;</span> System.Live_Demos_
-                        <motion.span
-                            animate={{ opacity: [1, 0] }}
-                            transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
-                            className="inline-block w-3 h-8 bg-cyan-400 ml-1"
-                        />
-                    </h2>
+                    <div className="flex items-center gap-4 mb-6 w-full overflow-hidden">
+                        <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary,white)] whitespace-nowrap flex items-center">
+                            <span className="text-cyan-400 mr-2">{'>'}</span>
+                            Демо_
+                            <motion.span
+                                animate={{ opacity: [1, 0] }}
+                                transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
+                                className="inline-block w-3 h-8 md:h-10 bg-cyan-400 ml-2"
+                            />
+                        </h2>
+                        <div className="h-px bg-gradient-to-r from-cyan-500/50 to-transparent flex-1 mt-2"></div>
+                    </div>
                     <p className="text-slate-400 max-w-2xl text-lg relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-gradient-to-b before:from-cyan-500/50 before:to-transparent">
                         Демонстрация возможностей. Сгенерировано и развернуто ИИ-агентами.
                     </p>

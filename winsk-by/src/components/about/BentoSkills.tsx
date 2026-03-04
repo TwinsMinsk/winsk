@@ -240,17 +240,21 @@ export function BentoSkills() {
     const y4 = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
     return (
-        <section ref={containerRef} className="py-24 px-6 md:px-12 max-w-[var(--container-max)] mx-auto w-full overflow-hidden">
+        <section ref={containerRef} className="py-24 px-6 max-w-7xl mx-auto w-full overflow-hidden">
+            <div className="flex items-center gap-4 mb-4 w-full overflow-hidden">
+                <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary,white)] whitespace-nowrap">
+                    <span className="text-emerald-400 mr-2">{'>'}</span>
+                    Профиль_
+                </h2>
+                <div className="h-px bg-gradient-to-r from-emerald-500/50 to-transparent flex-1 mt-2"></div>
+            </div>
             <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="mb-12"
             >
-                <h2 className="text-3xl md:text-4xl font-bold font-mono text-[var(--color-text-primary)] mb-4 tracking-tight">
-                    <span className="text-[var(--color-terminal-green)] mr-2">{">"}</span> Профиль_
-                </h2>
-                <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl font-mono leading-relaxed">
+                <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl font-mono leading-relaxed mt-4">
                     «Через 5 лет код будут писать исключительно машины. Я уже сегодня тот, кто ими управляет».
                 </p>
             </motion.div>

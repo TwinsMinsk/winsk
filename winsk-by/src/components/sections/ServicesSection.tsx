@@ -1,168 +1,136 @@
 'use client';
 
-import Image from 'next/image';
-import { motion, Variants, useScroll, useTransform } from 'framer-motion';
-import { MagneticWrapper } from '@/components/ui/MagneticWrapper';
-import { ScrambleHoverText } from '@/components/animations/ScrambleHoverText';
-import { useRef } from 'react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Terminal } from 'lucide-react';
 
-const services = [
+const servicesData = [
     {
-        title: "Разработка SaaS & AI MVP",
-        desc: "Ускоренный запуск стартапов от идеи до продакшена. Проектирование отказоустойчивой архитектуры, мгновенный старт разработки функционального продукта за недели благодаря AI-оркестрации и современным фреймворкам.",
-        tags: ["Next.js", "Full-Stack", "Architecture"],
-        image: "/services/service-mvp.jpg"
+        id: 'mvp',
+        title: 'AI-Powered MVPs & SaaS',
+        shortDesc: 'Быстрый запуск стартапов',
+        fullDesc: 'Я проектирую масштабируемую архитектуру и разрабатываю полнофункциональные продукты за недели, а не месяцы, используя мощь Multi-Agent систем для ускорения написания кода.',
+        features: ['Архитектура базы данных', 'Next.js & React Frontend', 'Интеграция AI-моделей', 'Авторизация и биллинг (Stripe)'],
+        tags: ['Next.js', 'PostgreSQL', 'AI Orchestration']
     },
     {
-        title: "Умные Боты & AI Агенты",
-        desc: "Интеграция автономных LLM и RAG-систем поверх данных вашего бизнеса. Создание мощных Telegram-ассистентов нового поколения, способных консультировать, парсить данные и закрывать сделки 24/7 без живых операторов.",
-        tags: ["LLM", "RAG", "Telegram"],
-        image: "/services/service-bots.jpg"
+        id: 'bots',
+        title: 'Smart Bots & AI Agents',
+        shortDesc: 'Telegram-боты и RAG',
+        fullDesc: 'Разработка интеллектуальных систем, которые знают всё о вашем бизнесе. Ваши данные превращаются в умного ассистента, который консультирует клиентов, продает и автоматизирует саппорт 24/7.',
+        features: ['RAG (Поиск по базе знаний)', 'Telegram API & WebApps', 'Интеграция с вашей CRM', 'Fine-tuning LLM'],
+        tags: ['Python', 'OpenAI API', 'Vector DBs']
     },
     {
-        title: "Автоматизация Процессов",
-        desc: "Связка разрозненных SaaS-сервисов, CRM и БД по API в единый механизм. Создание скриптов и невидимых пайплайнов маршрутизации бизнес-данных, экономящих сотни часов монотонного ручного труда вашей команды.",
-        tags: ["API", "Automations", "Python"],
-        image: "/services/service-automation.jpg"
+        id: 'automation',
+        title: 'Workflow Automation',
+        shortDesc: 'Оптимизация процессов',
+        fullDesc: 'Связывание разрозненных сервисов в единый бесшовный механизм. Я создаю невидимые пайплайны, которые экономят сотни часов рутинной работы вашей команды.',
+        features: ['Интеграции по API (CRM, ERP)', 'Webhooks & WebSockets', 'Парсинг и обработка данных', 'Автоматизированная отчетность'],
+        tags: ['Node.js', 'API Design', 'Data Flow']
     },
     {
-        title: "Премиальный Веб (Web 3.0)",
-        desc: "Разработка высоконагруженных порталов и лендингов с кинематографичной анимацией интерфейса. Идеальное техническое SEO (100 Lighthouse), мгновенная загрузка страниц и 3D-графика для вау-эффекта ваших клиентов.",
-        tags: ["UI/UX", "Framer Motion", "React"],
-        image: "/services/service-web.jpg"
+        id: 'web',
+        title: 'High-Performance Web',
+        shortDesc: 'Премиальные платформы',
+        fullDesc: 'Создание корпоративных порталов, дашбордов и промо-сайтов. Плавные анимации, идеальное SEO и эстетика Forced Dark Mode, которая продает вашу технологичность.',
+        features: ['Next.js App Router', 'Framer Motion Animations', 'Адаптивный Glassmorphism', '100/100 Lighthouse Score'],
+        tags: ['TypeScript', 'Tailwind v4', 'UI/UX']
     }
 ];
 
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.15
-        }
-    }
-};
-
-const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { type: 'spring', stiffness: 100, damping: 20 }
-    }
-};
-
 export function ServicesSection() {
-    const containerRef = useRef<HTMLElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
+    const [activeTab, setActiveTab] = useState(servicesData[0].id);
 
-    const yOffsets = [
-        useTransform(scrollYProgress, [0, 1], [50, -50]),
-        useTransform(scrollYProgress, [0, 1], [100, -100]),
-        useTransform(scrollYProgress, [0, 1], [30, -30]),
-        useTransform(scrollYProgress, [0, 1], [80, -80])
-    ];
+    const activeService = servicesData.find(s => s.id === activeTab) || servicesData[0];
 
     return (
-        <section ref={containerRef} className="py-24 relative z-10 mt-12 mb-12" id="services">
-            <div className="container mx-auto px-4 md:px-6 relative">
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary)]">
-                        <span className="text-[var(--color-terminal-green)] mr-2">{'>'}</span>
-                        Услуги_
-                    </h2>
-                    <div className="h-px bg-gradient-to-r from-[var(--color-terminal-green)]/50 to-transparent flex-1 mt-2"></div>
+        <section className="py-24 relative z-10 max-w-7xl mx-auto px-6" id="services">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-12 w-full overflow-hidden">
+                <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary,white)] whitespace-nowrap">
+                    <span className="text-emerald-400 mr-2">{'>'}</span>
+                    Услуги_
+                </h2>
+                <div className="h-px bg-gradient-to-r from-emerald-500/50 to-transparent flex-1 mt-2"></div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-12">
+                {/* Left Column (Tabs) */}
+                <div className="lg:col-span-4 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-2 pb-4 lg:pb-0 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {servicesData.map((service) => {
+                        const isActive = activeTab === service.id;
+                        return (
+                            <button
+                                key={service.id}
+                                onClick={() => setActiveTab(service.id)}
+                                className={`text-left whitespace-nowrap lg:whitespace-normal flex-shrink-0 lg:flex-shrink p-4 rounded-xl lg:rounded-r-none lg:rounded-l-xl transition-all border-l-0 lg:border-l-2 ${isActive
+                                    ? "text-white bg-white/10 lg:border-emerald-400"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5 border-transparent lg:border-transparent"
+                                    }`}
+                            >
+                                <div className="text-xs uppercase tracking-wider mb-1 opacity-70">
+                                    {service.shortDesc}
+                                </div>
+                                <div className="text-lg font-bold">
+                                    {service.title}
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Grid */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
-                >
-                    {services.map((service, idx) => (
+                {/* Right Column (Content) */}
+                <div className="lg:col-span-8 relative min-h-[500px]">
+                    <AnimatePresence mode="wait">
                         <motion.div
-                            key={idx}
-                            style={{ y: yOffsets[idx] }}
-                            className="h-full"
+                            key={activeService.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            className="relative bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden h-full flex flex-col p-8 lg:p-12"
                         >
-                            <motion.div
-                                variants={itemVariants}
-                                whileHover="hover"
-                                className="group relative overflow-hidden rounded-2xl h-[400px] border border-white/5 bg-black"
-                            >
-                                {/* Background Image Layer */}
-                                <motion.div
-                                    className="absolute inset-0 z-0"
-                                    variants={{
-                                        hover: { scale: 1.05, transition: { duration: 0.7, ease: "easeOut" } }
-                                    }}
-                                >
-                                    <Image
-                                        src={service.image}
-                                        alt={service.title}
-                                        fill
-                                        quality={90}
-                                        className="object-cover opacity-80"
-                                        sizes="(max-width: 768px) 100vw, 50vw"
-                                    />
-                                </motion.div>
+                            {/* Decorative Glow */}
+                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                                {/* Gradient Overlay */}
-                                <div className="absolute inset-0 z-[5] bg-gradient-to-t from-black/90 via-black/30 to-black/10 group-hover:from-black/90 transition-colors duration-500" />
+                            {/* Body */}
+                            <div className="relative z-10 flex-1 flex flex-col">
+                                <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">{activeService.title}</h3>
+                                <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mb-8">
+                                    {activeService.fullDesc}
+                                </p>
 
-                                {/* Hover Border Highlight */}
-                                <div className="absolute inset-0 z-20 border-2 border-transparent group-hover:border-emerald-500/30 rounded-2xl transition-colors duration-500 pointer-events-none" />
-
-                                {/* Glass Panel Content Layer */}
-                                <div className="absolute bottom-0 z-10 w-full p-6 backdrop-blur-md bg-black/40 border-t border-white/10 transition-transform duration-500 group-hover:bg-black/50">
-                                    <h3 className="text-2xl font-bold text-white mb-2">{service.title}</h3>
-                                    <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-4">
-                                        {service.desc}
-                                    </p>
-
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2">
-                                        {service.tags.map((tag, tagIdx) => (
-                                            <span
-                                                key={tagIdx}
-                                                className="px-3 py-1 text-xs font-mono rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20"
-                                            >
-                                                {tag}
-                                            </span>
+                                {/* Features section */}
+                                <div className="mt-auto">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {activeService.features.map((feature, idx) => (
+                                            <div key={idx} className="flex items-start gap-4 bg-black/20 p-4 rounded-xl border border-white/5">
+                                                <Terminal className="text-emerald-400 w-5 h-5 shrink-0 mt-0.5" />
+                                                <span className="text-slate-200">{feature}</span>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
-                            </motion.div>
-                        </motion.div>
-                    ))}
-                </motion.div>
 
-                {/* Closing CTA */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="mt-16 flex justify-center"
-                >
-                    <MagneticWrapper>
-                        <a
-                            href="/#contact"
-                            aria-label="Начать проект"
-                            className="group relative inline-flex items-center justify-center px-8 py-4 font-sans text-base font-bold text-black transition-all duration-300 bg-white rounded-full hover:bg-[var(--color-terminal-green)] hover:scale-105 hover:shadow-[0_0_40px_rgba(34,197,94,0.4)]"
-                        >
-                            <ScrambleHoverText text="Начать проект" />
-                            <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">{">"}</span>
-                        </a>
-                    </MagneticWrapper>
-                </motion.div>
+                                {/* Tags */}
+                                <div className="flex flex-wrap gap-2 mt-8">
+                                    {activeService.tags.map((tag, idx) => (
+                                        <span
+                                            key={idx}
+                                            className="text-xs font-mono text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-400/20"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
             </div>
+
+            <div className="hidden lg:block absolute -top-40 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[128px] pointer-events-none" />
         </section>
     );
 }

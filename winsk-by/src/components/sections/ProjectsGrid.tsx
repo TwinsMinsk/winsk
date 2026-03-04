@@ -22,14 +22,18 @@ export function ProjectsGrid() {
 
     return (
         <section id="work" className="py-24 px-6 max-w-[1280px] mx-auto w-full">
+            <div className="flex items-center gap-4 mb-12 w-full overflow-hidden">
+                <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary,white)] whitespace-nowrap">
+                    <span className="text-emerald-400 mr-2">{'>'}</span>
+                    Портфолио_
+                </h2>
+                <div className="h-px bg-gradient-to-r from-emerald-500/50 to-transparent flex-1 mt-2"></div>
+            </div>
+
             <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--color-border)] pb-6">
                 <div>
-                    <h2 className="text-3xl font-bold text-[var(--color-text-primary)] inline-flex items-center">
-                        <span className="text-[var(--color-terminal-green)] mr-3 font-mono">{'//'}</span>
-                        Архитектурные Решения
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] mt-2 font-mono text-sm">
-                        Избранные кейсы: от комплексных ERP до экосистем с ИИ-агентами.
+                    <p className="text-[var(--color-text-secondary)] font-mono text-sm max-w-xl">
+                        Избранные работы: от комплексных ERP до экосистем с ИИ-агентами.
                     </p>
                 </div>
 
