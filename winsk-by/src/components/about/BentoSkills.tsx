@@ -3,7 +3,7 @@
 
 import { motion, Variants, useMotionValue, useMotionTemplate, useScroll, useTransform } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
-import { Laptop, Server, Database } from "lucide-react";
+import { FileCode, Sparkles, Rocket } from "lucide-react";
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -121,56 +121,73 @@ function SkillCard({ title, description, tags, className, accentColor = "var(--c
     );
 }
 
-function ArchitectureVisualizer() {
+function AIPipelineVisualizer() {
     return (
-        <div className="mt-6 h-28 relative rounded-lg border border-white/5 bg-black/40 overflow-hidden flex items-center justify-between px-2 md:px-8 shadow-inner" aria-hidden="true">
+        <div className="mt-6 py-6 sm:py-0 sm:h-32 relative rounded-xl border border-white/5 bg-black/40 overflow-hidden flex flex-col sm:flex-row items-center justify-center sm:justify-between px-4 md:px-10 shadow-inner gap-2 sm:gap-0" aria-hidden="true">
             {/* Grid background */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:12px_12px]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[length:16px_16px]" />
 
-            {/* Left Node: Client */}
+            {/* Node 1: Context / Specs */}
             <div className="relative z-10 flex flex-col items-center gap-2">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.15)] group-hover:border-purple-500/50 transition-colors duration-300">
-                    <Laptop className="w-5 h-5 md:w-6 md:h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2 shadow-lg group-hover:border-white/20 transition-all duration-300">
+                    <FileCode className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[10px] font-mono text-slate-300 uppercase tracking-tighter whitespace-nowrap">Context / Specs</span>
                 </div>
-                <span className="text-[9px] md:text-[10px] text-gray-400 font-mono tracking-wider">CLIENT</span>
             </div>
 
-            {/* Connecting Line 1 */}
-            <div className="relative z-10 flex-1 flex items-center px-4">
-                <div className="w-full h-[1px] bg-gradient-to-r from-purple-500/20 via-blue-500/40 to-blue-500/20 relative overflow-hidden">
+            {/* Connection 1 (Mobile) */}
+            <div className="relative z-10 flex sm:hidden h-6 w-[1px] bg-gradient-to-b from-transparent via-emerald-500/30 to-transparent"></div>
+            
+            {/* Connection 1 (Desktop) */}
+            <div className="relative z-10 flex-1 items-center mx-2 px-2 overflow-hidden h-full min-w-[30px] hidden sm:flex">
+                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent relative">
                     <motion.div
-                        className="absolute top-0 bottom-0 w-8 bg-gradient-to-r from-transparent via-blue-400 to-transparent blur-[1px]"
-                        animate={{ left: ["-20%", "120%"] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400 blur-[2px] shadow-[0_0_8px_#10b981]"
+                        animate={{ left: ["-10%", "110%"] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     />
                 </div>
             </div>
 
-            {/* Middle Node: Server */}
+            {/* Node 2: AI Orchestrator (Pulsing) */}
             <div className="relative z-10 flex flex-col items-center gap-2">
-                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:border-blue-500/50 transition-colors duration-300">
-                    <Server className="w-6 h-6 md:w-7 md:h-7 text-blue-400 group-hover:text-blue-300 transition-colors" />
-                </div>
-                <span className="text-[9px] md:text-[10px] text-gray-400 font-mono tracking-wider">API_GATEWAY</span>
+                <motion.div
+                    animate={{ 
+                        scale: [1, 1.05, 1],
+                        boxShadow: [
+                            "0 0 0px rgba(16,185,129,0)",
+                            "0 0 20px rgba(16,185,129,0.3)",
+                            "0 0 0px rgba(16,185,129,0)"
+                        ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 rounded-xl px-4 py-3 flex items-center gap-2 shadow-[0_0_30px_rgba(16,185,129,0.1)] group-hover:border-emerald-500/50 transition-all duration-300"
+                >
+                    <Sparkles className="w-4 h-4 text-emerald-400 fill-emerald-400/20 shrink-0" />
+                    <span className="text-[10px] font-mono text-slate-300 uppercase tracking-tighter whitespace-nowrap">AI Orchestrator</span>
+                </motion.div>
             </div>
 
-            {/* Connecting Line 2 */}
-            <div className="relative z-10 flex-1 flex items-center px-4">
-                <div className="w-full h-[1px] bg-gradient-to-r from-blue-500/20 via-emerald-500/40 to-emerald-500/20 relative overflow-hidden">
+            {/* Connection 2 (Mobile) */}
+            <div className="relative z-10 flex sm:hidden h-6 w-[1px] bg-gradient-to-b from-transparent via-emerald-500/30 to-transparent"></div>
+
+            {/* Connection 2 (Desktop) */}
+            <div className="relative z-10 flex-1 items-center mx-2 px-2 overflow-hidden h-full min-w-[30px] hidden sm:flex">
+                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent relative">
                     <motion.div
-                        className="absolute top-0 bottom-0 w-8 bg-gradient-to-r from-transparent via-emerald-400 to-transparent blur-[1px]"
-                        animate={{ left: ["-20%", "120%"] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 0.75 }}
+                        className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400 blur-[2px] shadow-[0_0_8px_#10b981]"
+                        animate={{ left: ["-10%", "110%"] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 1 }}
                     />
                 </div>
             </div>
 
-            {/* Right Node: DB */}
+            {/* Node 3: Production */}
             <div className="relative z-10 flex flex-col items-center gap-2">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] group-hover:border-emerald-500/50 transition-colors duration-300">
-                    <Database className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2 shadow-lg group-hover:border-white/20 transition-all duration-300">
+                    <Rocket className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[10px] font-mono text-slate-300 uppercase tracking-tighter whitespace-nowrap">Production</span>
                 </div>
-                <span className="text-[9px] md:text-[10px] text-gray-400 font-mono tracking-wider">DATABASE</span>
             </div>
         </div>
     );
@@ -240,7 +257,7 @@ export function BentoSkills() {
     const y4 = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
     return (
-        <section ref={containerRef} className="py-24 px-6 max-w-7xl mx-auto w-full overflow-hidden">
+        <section id="profile" ref={containerRef} className="py-24 px-6 max-w-7xl mx-auto w-full overflow-hidden">
             <div className="flex items-center gap-4 mb-4 w-full overflow-hidden">
                 <h2 className="text-3xl md:text-5xl font-bold font-mono text-[var(--color-text-primary,white)] whitespace-nowrap">
                     <span className="text-emerald-400 mr-2">{'>'}</span>
@@ -268,21 +285,21 @@ export function BentoSkills() {
             >
                 <motion.div style={{ y: y1 }} className="md:col-span-2">
                     <SkillCard
-                        title="Hard Skills | Архитектура и Инженерия"
-                        description="Я не просто пишу код — я проектирую системы. Мой подход основан на глубоком ресерче: я анализирую задачу и вместе с AI подбираю идеальный стек и архитектуру под бизнес-запрос."
-                        tags={["System Architecture", "Python", "API Integrations"]}
+                        title="Hard Skills | AI-Driven Development"
+                        description="Создаю AI-системы, которые реально работают в продакшене: подключаю языковые модели к данным бизнеса через API и RAG, выстраиваю цепочки из нескольких AI-агентов и слежу, чтобы всё было надёжным и измеримым."
+                        tags={["System Architecture", "Python", "API Integrations", "MCP", "RAG", "Git"]}
                         className="h-full"
-                        accentColor="#7C3AED"
+                        accentColor="#10B981"
                     >
-                        <ArchitectureVisualizer />
+                        <AIPipelineVisualizer />
                     </SkillCard>
                 </motion.div>
 
                 <motion.div style={{ y: y2 }} className="md:col-span-1">
                     <SkillCard
                         title="Digital Skills | AI-Дирижер"
-                        description="Владею передовым инструментарием AI-разработки. Мой воркфлоу — это кросс-валидация решений через разные LLM."
-                        tags={["Cursor", "Antigravity", "Claude Code"]}
+                        description="Использую AI как основной рабочий инструмент: пишу код с помощью AI-агентов, проверяю результат через несколько моделей и прототипирую интерфейсы через генеративный UI. Меняются тулы — подход остаётся."
+                        tags={["Cursor", "Antigravity", "Claude Code", "Codex", "Agent Skills", "Prompt Engineering"]}
                         className="h-full"
                         accentColor="#2563EB"
                     />
@@ -291,8 +308,8 @@ export function BentoSkills() {
                 <motion.div style={{ y: y3 }} className="md:col-span-1">
                     <SkillCard
                         title="Soft Skills | Product Vision"
-                        description="Беру размытые идеи заказчика, декомпозирую их с помощью AI и возвращаюсь с четким планом."
-                        tags={["Client Communication", "Problem Solving"]}
+                        description="Помогаю клиентам понять, где AI принесёт реальную пользу. Разбираю задачу на части, предлагаю план внедрения и веду проект от первого прототипа до готового решения."
+                        tags={["Client Communication", "Problem Solving", "AI Consulting", "Product Strategy"]}
                         className="h-full"
                         accentColor="#10B981"
                     />
@@ -301,8 +318,8 @@ export function BentoSkills() {
                 <motion.div style={{ y: y4 }} className="md:col-span-2">
                     <SkillCard
                         title="Meta Skills | Эволюция"
-                        description="Скорость изменений в AI феноменальна, и я живу в этом ритме. Непрерывный тест новых тулзов и обучение."
-                        tags={["Continuous Learning", "Adaptability"]}
+                        description="Каждый новый проект — повод обновить подходы. Слежу за новыми AI-моделями, фреймворками и способами автоматизации. Всё новое сначала тестирую на себе — потом внедряю клиентам."
+                        tags={["Continuous Learning", "Adaptability", "Agentic Workflows"]}
                         className="h-full"
                         accentColor="#F1F5F9"
                     >
