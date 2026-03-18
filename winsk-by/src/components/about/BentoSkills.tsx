@@ -137,7 +137,7 @@ function AIPipelineVisualizer() {
 
             {/* Connection 1 (Mobile) */}
             <div className="relative z-10 flex sm:hidden h-6 w-[1px] bg-gradient-to-b from-transparent via-emerald-500/30 to-transparent"></div>
-            
+
             {/* Connection 1 (Desktop) */}
             <div className="relative z-10 flex-1 items-center mx-2 px-2 overflow-hidden h-full min-w-[30px] hidden sm:flex">
                 <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent relative">
@@ -152,7 +152,7 @@ function AIPipelineVisualizer() {
             {/* Node 2: AI Orchestrator (Pulsing) */}
             <div className="relative z-10 flex flex-col items-center gap-2">
                 <motion.div
-                    animate={{ 
+                    animate={{
                         scale: [1, 1.05, 1],
                         boxShadow: [
                             "0 0 0px rgba(16,185,129,0)",
@@ -272,7 +272,7 @@ export function BentoSkills() {
                 className="mb-12"
             >
                 <p className="text-[var(--color-text-secondary)] text-lg max-w-2xl font-mono leading-relaxed mt-4">
-                    «Через 5 лет код будут писать исключительно машины. Я уже сегодня тот, кто ими управляет».
+                    «Через пару лет код будут писать исключительно машины. Я уже сегодня тот, кто ими управляет».
                 </p>
             </motion.div>
 

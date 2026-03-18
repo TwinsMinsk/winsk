@@ -12,32 +12,58 @@ export function TerminalDecode() {
     const [mounted, setMounted] = useState(false);
     const [phase, setPhase] = useState<Phase>('idle');
     const [showGlitch, setShowGlitch] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Скрамбл: "Location.ID: Minsk" → "Brand.ID: Winsk"
+    const strings = [
+        { typewriter: '> Location.ID: Minsk', scramble: 'Location.ID: Minsk' },
+        { typewriter: '> Brand.ID: Winsk', scramble: 'Brand.ID: Winsk' },
+    ];
+
+    const currentPair = strings[currentIndex];
+
+    // Скрамбл переход
     const scrambler = useScrambleText({
         speed: 30,
-        onComplete: () => setPhase('resolved'),
+        onComplete: () => {
+            setPhase('resolved');
+            // Wait before starting the next cycle
+            setTimeout(() => {
+                const nextIndex = (currentIndex + 1) % strings.length;
+                setCurrentIndex(nextIndex);
+                setPhase('glitch');
+                setShowGlitch(true);
+            }, 4000); // 4 seconds pause at resolved state
+        },
     });
 
-    // Тайпрайтер первой строки
+    // Тайпрайтер первой строки (только для первого запуска)
     const typewriter = useTypewriter({
         speed: 40,
         startDelay: 500,
         onComplete: () => {
             setPhase('glitch');
             setShowGlitch(true);
-            setTimeout(() => {
-                setShowGlitch(false);
-                setPhase('scrambling');
-                scrambler.start('Location.ID: Minsk', 'Brand.ID: Winsk');
-            }, 1200);
         },
     });
+
+    // Управление фазами
+    useEffect(() => {
+        if (phase === 'glitch' && showGlitch) {
+            const timer = setTimeout(() => {
+                setShowGlitch(false);
+                setPhase('scrambling');
+                const nextPair = strings[currentIndex];
+                const prevPair = strings[(currentIndex - 1 + strings.length) % strings.length];
+                scrambler.start(prevPair.scramble, nextPair.scramble);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [phase, showGlitch, currentIndex, scrambler, strings]);
 
     useEffect(() => {
         setMounted(true);
         setPhase('typing');
-        typewriter.start('> Location.ID: Minsk');
+        typewriter.start(strings[0].typewriter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
