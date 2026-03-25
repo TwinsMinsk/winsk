@@ -2,31 +2,179 @@
 
 Полностью автоматизировать рутину стоковых фотографов и контент-мейкеров — от исследования рынка до массовой выгрузки визуального контента с AI.
 
-## Компоненты Экосистемы
+## Экосистема продуктов
 
-- **IQStocker Bot** (Telegram Bot + Web Admin)
-- **IQStocker Generating** (Web App + Chrome Extension)
-- **Adobe Scrapper** (Desktop-утилита)
-- **GPT-4 Vision Pipeline** (CLI-сервис)
+Проект состоит из 5 независимых, но глубоко интегрированных модулей (от парсера до SaaS):
+- **Data Extraction Pipeline:** Десктоп-утилита для массового парсинга референсов со стоков.
+- **AI Generation Engine:** Desktop-оркестратор для пакетной генерации контента через GPT и Midjourney.
+- **Smart Auto-Tagging:** CLI-инжектор метаданных (SEO) прямо в JPG через GPT-4 Vision и OpenAI Batch API.
+- **IQStocker SaaS:** Аналитическая платформа с Telegram-ботом, PostgreSQL БД и AI-прогнозированием трендов.
+- **Automation Node:** Full-Stack мост (FastAPI + Next.js + Chrome Extension) для фонового управления Discord.
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/ai-ecosystem/Service_modules_infographic.jpeg" 
+    alt="IQStocker AI Ecosystem — Наглядная схема взаимодействия всех пяти модулей" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">overview</span>
+    Взаимодействие компонентов экосистемы — от сбора данных до SaaS-аналитики.
+  </div>
+</div>
 
 ## Техническая реализация
 
-<SolutionsTable data='[{"task": "Мультимодельный AI", "solution": "GPT-4, Claude и Gemini в одном абстракшене", "complexity": "Unified response format"}, {"task": "Batch API", "solution": "Асинхронный сбор в .jsonl для OpenAI", "complexity": "Оркестрация и опрос статусов"}, {"task": "EXIF/Metadata", "solution": "AI -> EXIF инжект через ExifTool/ffmpeg", "complexity": "Binary-level writing"}]' />
+<SolutionsTable data='[{"task": "Stealth DOM Automation", "solution": "Инжект событий в React-дерево Discord через Manifest V3", "complexity": "Browser Extension API / Anti-fraud bypass"}, {"task": "AI Batch Processing", "solution": "Асинхронная сборка 10,000+ картинок в .jsonl для OpenAI", "complexity": "Orchestration & Async Polling (-50% API Cost)"}, {"task": "EXIF/Metadata Injection", "solution": "Прямая запись UTF-16 SEO-тегов в заголовки файлов", "complexity": "Binary-level Byte Modification"}, {"task": "High-load Парсинг", "solution": "10-поточный краулер с динамическим обходом защиты", "complexity": "Concurrency & Rate-Limits Automation"}]' />
 
-## Архитектура
+## Архитектура: Модульный пайплайн
 
-<ArchDiagram src="/images/projects/ai-ecosystem/arch.svg" />
+Для обеспечения отказоустойчивости и высокой скорости работы, монолитный процесс был разбит на узконаправленные микро-инструменты с чистой архитектурой (Separation of Concerns). Каждый модуль выполняет свою задачу, формируя единую экосистему.
 
-## Фрагменты кода
+<ModuleHeader id="module-1" number="01" title="Data Extraction Pipeline (Adobe Stock Scraper)" tech="Python · BeautifulSoup · ThreadPoolExecutor · tkinter" />
 
-<CodeSnippet
-  language="python"
-  filename="llm_service.py"
-  code="async def get_completions(prompt: str, provider='openai'):\n    if provider == 'openai': return await _openai_call(prompt)\n    elif provider == 'anthropic': return await _anthropic_call(prompt)\n    return await _gemini_call(prompt)"
+**Бизнес-задача:**
+Для обучения AI-моделей и анализа трендов заказчику требовалось массово собирать референсные изображения с Adobe Stock. Ручной поиск, применение фильтров и скачивание превью занимали у команды десятки часов еженедельно.
+
+**Техническое решение:**
+Разработано десктопное приложение на Python с интуитивным графическим интерфейсом и строгим разделением бизнес-логики (`utils.py`) и UI (`gui.py`). Скрипт автоматизирует весь процесс: от динамического построения сложных URL-запросов до параллельного скачивания файлов.
+
+**Ключевые возможности:**
+- **High-Performance Multithreading:** Интеграция `ThreadPoolExecutor` для асинхронного скачивания изображений в 10 потоков, что ускорило процесс экстракции данных в несколько раз.
+- **Desktop GUI:** Удобный интерфейс на базе `tkinter` для ввода поисковых запросов, настройки папок вывода и пагинации.
+- **Глубокая параметризация:** Динамическая сборка URL-запросов с поддержкой параметров сортировки, фильтров по цене (Premium/Standard) и ориентации.
+- **Экстракция метаданных:** Многоуровневый парсинг DOM-дерева через `BeautifulSoup` с извлечением специфичных микроразметок (itemprop='thumbnailUrl').
+
+<div className="relative my-6 max-w-2xl mx-auto group">
+  <div className="rounded-xl overflow-hidden border border-[var(--color-border)] bg-[#0d1117] shadow-xl relative transition-colors duration-300 group-hover:border-[var(--color-accent-primary)]/50">
+    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+    <img 
+      src="/images/projects/ai-ecosystem/module1-code-structure.jpg" 
+      alt="Чистая архитектура: Разделение интерфейса, ядра парсинга и логики скачивания" 
+      className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-100 group-hover:scale-[1.02]"
+    />
+  </div>
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">fig.1</span>
+    Separation of Concerns Layers
+  </div>
+</div>
+
+
+<ModuleHeader id="module-2" number="02" title="AI Content Generation Engine (GPT + Midjourney)" tech="PySide6 · OpenAI API · Key Rotation · Telegram Alerts" />
+
+**Бизнес-задача:**
+После сбора референсов заказчику требовалось генерировать тысячи уникальных изображений и SEO-оптимизированных описаний к ним. Использование веб-интерфейсов ChatGPT или Discord для Midjourney не позволяло масштабировать процесс и занимало слишком много ручного труда.
+
+**Техническое решение:**
+Создан десктопный комбайн на базе `PySide6` (Qt), который работает как единый оркестратор для OpenAI API и Midjourney. Программа берет на себя всю рутину по пакетной генерации контента, обеспечивая обход Rate Limits (лимитов запросов) за счет умной ротации пула API-ключей.
+
+**Ключевые возможности:**
+- **Multi-API Orchestration:** Бесшовная интеграция текстовых (GPT) и генеративных (Midjourney) моделей в едином асинхронном пайплайне.
+- **Fault Tolerance & Key Rotation:** Встроенная защита от блокировок API. Скрипт автоматически переключается между 10+ резервными ключами и умеет уходить в спящий режим (`pause.py`) при исчерпании глобальных лимитов.
+- **Telegram Alerting:** Кастомный логгер (`logger.py`) отслеживает состояние потоков и моментально отправляет уведомления в Telegram-бота при возникновении критических ошибок или успешном завершении батча.
+- **Premium Desktop GUI:** Профессиональный интерфейс на PySide6 с возможностью тонкой настройки параметров генерации (temperature, tokens, prompts).
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  ![Структура проекта: Интеграция UI, логгера, контроллера пауз и ядра генерации](/images/projects/ai-ecosystem/module2-code-structure.jpg)
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">fig.2</span>
+    Модульная архитектура — Изоляция логики логирования, UI-компонентов и многопоточного процессора.
+  </div>
+</div>
+
+
+<ModuleHeader id="module-3" number="03" title="Smart Auto-Tagging & EXIF Injector (GPT-4 Vision)" tech="GPT-4 Vision · OpenAI Batch API · piexif · PySide6" />
+
+**Бизнес-задача:**
+Создание изображений — это только половина дела. Загрузка тысяч файлов на стоки требует прописывания SEO-оптимизированных Title, Description и 50 ключевых слов для каждого изображения. Ручное тегирование убивало всю рентабельность процесса. Требовалась система, которая сама «посмотрит» на картинку, придумает теги и подготовит файл к загрузке.
+
+**Техническое решение:**
+Разработан скрипт-инжектор на базе `PySide6`. Программа использует `GPT-4 Vision` для визуального анализа контента и библиотеку `piexif` для низкоуровневой записи сгенерированных метаданных напрямую в заголовки `.jpg` файлов. 
+
+**V2.0 Optimization — OpenAI Batch API:**
+В процессе масштабирования (при объемах в десятки тысяч файлов) была внедрена архитектура **OpenAI Batch API**. Программа автоматически конвертирует изображения в `Base64`, упаковывает их в `.jsonl` пакеты и отправляет в асинхронную очередь. Это позволило снизить стоимость API-запросов на **50%** и снять ограничения по TPM за счет выделенной очереди.
+
+**Ключевые возможности:**
+- **Visual Context Analysis:** Скрипт кодирует изображение и передает его в мультимодальную LLM, получая 100% релевантные ключевые слова.
+- **EXIF Metadata Injection:** Прямая манипуляция байт-кодом. Сгенерированные данные конвертируются в UTF-16 (`utf-16le`) и записываются в теги `XPTitle`, `XPSubject` и `XPKeywords`.
+- **Smart Rate-Limiting & Async Polling:** Встроенная защита от исчерпания лимитов. Скрипт автономно опрашивает статус батчей и по готовности инжектит теги без блокировки UI.
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  ![Асинхронная логика формирования и отправки батчей](/images/projects/ai-ecosystem/module3-batch-code.jpg)
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">fig.3</span>
+    Batch Orchestration Flow — Логика формирования JSONL-пакетов и асинхронного поллинга результатов от OpenAI.
+  </div>
+</div>
+
+
+<ModuleHeader id="module-4" number="04" title="IQStocker (AI-Powered Analytics SaaS)" tech="aiogram · PostgreSQL · SQLAlchemy · Alembic · Docker · CI/CD" />
+
+**Бизнес-задача:**
+Создание контента — это лишь половина дела. Главная проблема — аналитика продаж. Авторам требовался инструмент, который может автоматически анализировать их сырые CSV-выгрузки со стоковых площадок, выявлять прибыльные ниши и с помощью ИИ прогнозировать, какой контент стоит создавать в следующем месяце для максимизации прибыли. Требовалось перевести хаотичные данные в пошаговую стратегию.
+
+**Техническое решение:**
+Разработан коммерческий SaaS-продукт с интерфейсом через Telegram-бота (`aiogram` / `python-telegram-bot`). Проект включает сложную архитектуру данных на базе `PostgreSQL` и `SQLAlchemy` (ORM) с миграциями через `Alembic`, а также интеграцию с LLM-моделями для семантического анализа рынка. Платформа имеет встроенную систему монетизации (Boosty/Tribute), управления подписками и реферальную программу.
+
+<TelegramLink href="https://t.me/IQStockerBot" label="@IQStockerBot" />
+
+**Ключевые возможности:**
+- **Automated CSV Analytics Engine (`pandas`):** Прогрессивные алгоритмы парсинга и расчета метрик портфолио (Revenue, RPI, bestsellers). Скрипт принимает отчеты от Adobe Stock/Shutterstock и трансформирует их в интуитивно понятные KPI-отчеты.
+- **AI Recommendation Engine (Market Producer):** Семантический анализ успешных работ и тегов через LLM. Нейросеть выступает в роли продюсера, выявляя скрытые паттерны успеха и генерируя персонализированные рекомендации для будущих съемок/генераций.
+- **Integrated Monetization & Billing:** Полноценная система тарифов и подписок. Реализованы модули обработки платежей через внешние шлюзы (Boosty, Tribute) с автоматическим управлением лимитами пользователей и выдачей «бустов».
+- **DevOps Maturity:** Проект полностью контейнеризирован (`docker-compose`). Жизненный цикл приложения управляется через автоматизированный CI/CD пайплайн: при пуше в `main` GitHub-ветку срабатывает workflow, который собирает Docker-образ и бесшовно обновляет production-сервер.
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/ai-ecosystem/iqstocker-architecture.png" 
+    alt="SaaS Architecture — Микросервисный подход: Bot, Database, LLM Engine и Payment Gateways" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">fig.4</span>
+    SaaS Ecosystem — Архитектура аналитической платформы: интеграция Telegram API, PostgreSQL и нейросетевого ядра.
+  </div>
+</div>
+
+
+<ModuleHeader id="module-5" number="05" title="Midjourney Automation Engine (Extension + SaaS)" tech="Next.js · FastAPI · PostgreSQL · TypeScript · Chrome Ext MV3" />
+
+**Бизнес-задача:**
+Заказчику требовалось генерировать тысячи изображений в фоновом режиме, но Discord строго запрещает использование неофициальных API и self-ботов для Midjourney, мгновенно блокируя такие аккаунты. Требовался абсолютно безопасный, масштабируемый инструмент, который автоматизирует процесс (ввод промптов, апскейл, скачивание), не вызывая подозрений у антифрод-систем Discord.
+
+**Техническое решение:**
+Разработана гибридная Full-Stack экосистема. Управление пулом задач происходит в облачном дашборде (frontend на `Next.js`, backend на `FastAPI` + `PostgreSQL`). Исполнителем выступает умное браузерное расширение (Chrome Extension на `TypeScript`, Manifest V3). Расширение внедряется в веб-клиент Discord и работает как «роботизированная рука»: оно берет промпты из базы и имитирует действия живого человека поверх React-дерева Discord.
+
+**Архитектура продукта (SaaS Ecosystem):**
+
+<SolutionsTable data='[{"task": "Web Portal (Frontend)", "solution": "Личный кабинет пользователя на **Next.js** с авторизацией через **TelegramLoginButton**, покупкой тарифов и балансом кредитов.", "complexity": "Next.js · TypeScript"}, {"task": "Chrome Extension (Executor)", "solution": "Невидимый **Manifest V3** робот в браузере. Синхронизируется с порталом и выполняет задачи в Discord через **Stealth DOM Injection**.", "complexity": "TypeScript · DOM API"}, {"task": "Backend API", "solution": "**FastAPI** + **PostgreSQL**: очередь задач, биллинг, интеграции с **Boosty** и **Tribute** для авто-начисления кредитов.", "complexity": "FastAPI · Alembic"}, {"task": "Admin Control Center", "solution": "Панель владельца: CRM пользователей, аналитика кредитов, реестр транзакций, **Audit Logs** ошибок расширения и конфигурация вебхуков.", "complexity": "Next.js · RLS"}]' />
+
+**Ключевые возможности:**
+- **Stealth DOM Automation (Manifest V3):** Безопасный обход защит Discord. Скрипт (`content.ts`) фокусируется на поле ввода, эмулирует `ClipboardEvent` для вставки промптов и отправляет нативные `KeyboardEvent` (Enter), имитируя естественные задержки (Human-like typing).
+- **Smart Queue & State Machine:** Асинхронная обработка очереди. Расширение непрерывно парсит DOM, отслеживая статус генерации (поиск прогресса %, ожидание кнопок U1-U4), автоматически нажимает Upscale и скачивает готовые исходники на жесткий диск.
+- **Full-Stack SaaS Platform:** Полноценный веб-портал с бесшовной авторизацией через Telegram (`TelegramLoginButton`). 
+- **Integrated Billing:** Бэкенд на FastAPI имеет интеграцию с платежными шлюзами (Boosty, Tribute) для автоматического начисления кредитов (generations) и обработки подписок.
+
+<VideoPlayer 
+  src="/video/ролик для портфолио.mp4" 
+  caption="Midjourney Automation Engine: Stealth DOM Injection & Discord Orchestration" 
 />
 
-## Скриншоты
+<ProjectButton 
+    href="https://gen.iqstocker.com/" 
+    label="Открыть SaaS Платформу" 
+    sublabel="Live Production"
+ />
 
-<Screenshots images='[{"src": "/images/projects/ai-ecosystem/bot.webp", "alt": "Телеграм бот"}, {"src": "/images/projects/ai-ecosystem/app.webp", "alt": "Web приложение"}]' />
-
-<CaseCTA />
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/ai-ecosystem/model_5.jpeg" 
+    alt="Midjourney Automation Architecture — Cloud Backend & Browser Extension Bridge" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">fig.5</span>
+    Automation Engine Architecture — Гибридная схема: Взаимодействие FastAPI, Chrome Extension и Discord DOM.
+  </div>
+</div>

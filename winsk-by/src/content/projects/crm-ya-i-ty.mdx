@@ -1,13 +1,64 @@
 ## Бизнес-задача
 
-Автоматизировать работу мастера-администратора: внедрить онлайн-запись для клиентов, автоматическое списание расходных материалов, ведение клиентской базы и прозрачный финансовый учет с расчетом налогов. Клиенты записывались в мессенджерах, что приводило к конфликтам.
+Салон красоты «Я и Ты» — типичный малый бизнес, где мастер совмещает роль администратора. До CRM запись клиентов велась через WhatsApp: конфликты расписания, потерянные заявки, ручной подсчёт выручки и налогов. Каждый вечер — час рутины на Excel.
+
+Задача: построить полноценную CRM, которая заменит мессенджеры, Excel и калькулятор — единая система для записей, склада, финансов и уведомлений. Ключевое требование — **онлайн-запись для клиентов** без регистрации: мастер высылает ссылку, клиент выбирает время, запись появляется в календаре.
+
+## Архитектура системы
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/crm-ya-i-ty/system-i-and-ty.jpeg" 
+    alt="Архитектурная схема CRM Я и Ты" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">architecture</span>
+    Архитектурная схема CRM: Взаимодействие Vue 3, Django REST API и Telegram-бота.
+  </div>
+</div>
+
+## Интерфейс системы
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/crm-ya-i-ty/CRM-screen.jpg" 
+    alt="Главный экран CRM — Календарь записей" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">interface</span>
+    Главный экран CRM — Интерактивный календарь записей.
+  </div>
+</div>
+
+Система построена на трёх слоях:
+
+- **Frontend (Vue.js 3 + PrimeVue)** — SPA с Pinia-стейтом, календарь с drag-and-drop, дашборд с Chart.js, формы онлайн-записи.
+- **Backend (Django + DRF)** — 8 приложений: `calendar`, `clients`, `finance`, `warehouse`, `services`, `users`, `notifications`, `audit`. REST API с ролевым доступом (RBAC).
+- **Интеграции** — Telegram Bot (aiogram 3 + APScheduler для напоминаний), Supabase Storage (фото работ клиентов), PostgreSQL (основная БД).
+
+## Модули системы
+
+Система состоит из 8 независимых Django-приложений, каждое отвечает за свой домен:
+
+- **Календарь** — drag-and-drop сетка записей с детекцией коллизий (collision detection) и resize длительности. Публичная страница самозаписи клиентов.
+- **CRM клиентов** — база данных, история визитов, галерея фото работ по каждому клиенту.
+- **Складской учёт** — номенклатура, тех. карты услуг, автоматическое списание расходных материалов при выполнении записи. Контроль остатков и алерты.
+- **Финансовый модуль** — учёт доходов/расходов, расчёт зарплат мастеров (процент или фикс), налоговая отчётность по профилю (ИП / самозанятый).
+- **Аналитика** — дашборд с графиками: выручка по периодам, ТОП мастеров и услуг, активность клиентов, LTV.
+- **Telegram-бот** — пуш-уведомления мастерам о новых записях, команды, напоминания перед визитом.
+- **Онлайн-запись** — публичная форма для клиентов (без регистрации), мастер высылает ссылку.
+- **Безопасность** — ролевая модель (admin / master), Audit Log всех действий, защита данных.
 
 ## Техническая реализация
 
-<SolutionsTable data='[{"task": "Интерактивный календарь", "solution": "Сетка записей с drag-and-drop", "complexity": "Предотвращение двойных бронирований"}, {"task": "Складской учёт", "solution": "Автоматическое списание при услуге", "complexity": "Атомарные транзакции"}, {"task": "Уведомления", "solution": "Telegram-бот на aiogram 3", "complexity": "Реал-тайм логика с retry"}]' />
+<SolutionsTable data='[{"task": "Интерактивный календарь", "solution": "Drag & Drop сетка записей, collision detection", "complexity": "Предотвращение двойных бронирований"}, {"task": "CRM клиентов", "solution": "База + история визитов + галерея фото", "complexity": "Supabase Storage для медиа"}, {"task": "Складской учёт", "solution": "Тех. карты → автосписание при услуге", "complexity": "Атомарные транзакции в PostgreSQL"}, {"task": "Финансовый модуль", "solution": "Учёт доходов/расходов, расчёт зарплат и налогов", "complexity": "Формулы зависят от профиля (ИП/самозанятый)"}, {"task": "Аналитика", "solution": "Chart.js дашборд: выручка, ТОП услуг, LTV", "complexity": "Агрегации по множеству измерений"}, {"task": "Telegram-бот", "solution": "aiogram 3 + APScheduler: уведомления и напоминания", "complexity": "Реал-тайм + планировщик cron-задач"}, {"task": "Онлайн-запись", "solution": "Публичная форма без регистрации", "complexity": "Валидация слотов, связка с календарём"}]' />
 
-## Скриншоты
+## Ключевые интеграции
 
-<Screenshots images='[{"src": "/images/projects/crm-ya-i-ty/calendar.webp", "alt": "Интерактивный Календарь"}, {"src": "/images/projects/crm-ya-i-ty/inventory.webp", "alt": "Учет Склада"}]' />
+**Supabase Storage** — фотографии работ клиентов загружаются в облачное хранилище. Backend генерирует подписанные URL для доступа к медиа. Галерея привязана к каждому клиенту в CRM.
 
-<CaseCTA />
+**Telegram Bot (aiogram 3)** — мастер регистрируется в боте, получает уведомления о новых записях, изменениях в расписании и напоминания за 1 час до визита. APScheduler запускает cron-задачи для автоматических напоминаний.
+
+**Railway** — деплой backend + PostgreSQL в одном проекте. Gunicorn как production WSGI-сервер. Frontend (Vue 3 + Vite) — статическая сборка.

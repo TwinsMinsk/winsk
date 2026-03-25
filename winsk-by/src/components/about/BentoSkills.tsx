@@ -291,6 +291,9 @@ export function BentoSkills() {
                         className="h-full"
                         accentColor="#10B981"
                     >
+                        <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mt-4 mb-2">
+                            Проектирую масштабируемые бекенд-сервисы на Node.js и Python. Особое внимание уделяю архитектуре, строгой типизации и скорости работы API. Покрываю код тестами, настраиваю CI/CD пайплайны и мониторинг для отказоустойчивой работы в продакшене.
+                        </p>
                         <AIPipelineVisualizer />
                     </SkillCard>
                 </motion.div>

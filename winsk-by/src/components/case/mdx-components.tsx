@@ -5,6 +5,14 @@ import { Screenshots } from './Screenshots';
 import { CodeSnippet } from './CodeSnippet';
 import { CaseCTA } from './CaseCTA';
 
+import { TelegramLink } from './TelegramLink';
+import { VideoPlayer } from './VideoPlayer';
+import { ProjectButton } from './ProjectButton';
+import { ModuleHeader } from './ModuleHeader';
+import { LiveDemo } from './LiveDemo';
+import { VideoPlaceholder } from './VideoPlaceholder';
+import { SitePreviewCard } from './SitePreviewCard';
+
 // Custom components mapped to HTML tags or directly imported in MDX
 export const mdxComponents = {
     h2: ({ children }: { children?: ReactNode }) => (
@@ -42,5 +50,12 @@ export const mdxComponents = {
     ArchDiagram,
     Screenshots,
     CodeSnippet,
-    CaseCTA
+    CaseCTA,
+    TelegramLink,
+    VideoPlayer,
+    ProjectButton,
+    ModuleHeader,
+    LiveDemo,
+    VideoPlaceholder,
+    SitePreviewCard,
 };

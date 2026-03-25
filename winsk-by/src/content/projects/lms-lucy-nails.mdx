@@ -1,21 +1,61 @@
 ## Бизнес-задача
 
-Требовалось создать надежную площадку для инфобизнеса, которая автоматизирует продажу курсов, защитит видео от пиратства и предоставит удобный личный кабинет для студентов с доступом через Telegram.
+Lucy Smirnova — профессиональный мастер маникюра, которому требовалась собственная
+платформа для продажи видео-курсов напрямую аудитории. Ключевые требования: **защита
+видеоконтента от скачивания** (DRM), **бесшовная авторизация через Telegram** без
+лишних регистраций, два тарифа с разным уровнем поддержки и полная **автоматизация
+выдачи доступов** после оплаты. CMS-решения не подходили — нужна кастомная платформа
+от backend до фронта.
+
+<LiveDemo url="https://lucysmirnova.ru/" label="Открыть платформу → lucysmirnova.ru" />
+
+## Архитектура системы
+
+<div className="my-10 border border-white/10 rounded-2xl overflow-hidden bg-white/5 p-4 backdrop-blur-md max-w-2xl mx-auto group">
+  <img 
+    src="/images/projects/lms-lucy-nails/LMS_Architecture_Diagram.jpeg" 
+    alt="Архитектурная схема LMS Lucy Nails" 
+    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+  />
+  <div className="text-[10px] text-slate-500 text-center mt-3 font-mono tracking-tighter uppercase">
+    <span className="text-[var(--color-terminal-green)] mr-1 opacity-70">architecture</span>
+    Архитектурная схема платформы: Frontend, Backend API и внешние сервисы.
+  </div>
+</div>
+
+Платформа построена на трёх независимых слоях:
+
+- **Frontend (Next.js 14 + TypeScript)** — публичный лендинг, личный кабинет студента
+  с видеоплеером Kinescope, прогресс по блокам.
+- **Backend (FastAPI + SQLAlchemy 2.0)** — REST API: Auth, Course, Payment services;
+  ACL-модель с тремя ролями (admin / student / guest).
+- **Внешние сервисы** — Kinescope CDN (DRM-видео), Prodamus (оплата), Telegram Bot API
+  (уведомления и закрытый чат для премиум-тарифа).
+
+## Видео-обзор
+
+<VideoPlayer 
+  src="/images/projects/lms-lucy-nails/Lucy Nails promo.mp4" 
+  caption="LMS Lucy Nails — Видео-демонстрация платформы" 
+/>
+
+
 
 ## Техническая реализация
 
-<SolutionsTable data='[{"task": "Защита видеоконтента", "solution": "Интеграция с Kinescope API", "complexity": "DRM-защита"}, {"task": "Безшовная авторизация", "solution": "Telegram Login Widget", "complexity": "OAuth 2.0 / TG ID"}, {"task": "Управление контентом", "solution": "3-уровневая иерархия курсов", "complexity": "ACL-модель"}, {"task": "Прогресс студента", "solution": "Серверный трекинг уроков", "complexity": "% завершения"}, {"task": "Аналитика продаж", "solution": "Дашборд с метриками", "complexity": "Fin-analytics"}]' />
+<SolutionsTable data='[{"task": "Защита видеоконтента", "solution": "Kinescope API + подписанный embed URL", "complexity": "DRM + Watermark"}, {"task": "Бесшовная авторизация", "solution": "Telegram Login Widget → JWT", "complexity": "OAuth 2.0 / TG ID"}, {"task": "Управление контентом", "solution": "3-уровневая иерархия: курс → блок → урок", "complexity": "ACL Role-based"}, {"task": "Прогресс студента", "solution": "Серверный трекинг завершённых уроков", "complexity": "% по блокам"}, {"task": "Автоматизация оплаты", "solution": "Prodamus webhook → выдача доступа", "complexity": "Webhook HMAC"}, {"task": "Уведомления студентов", "solution": "Telegram Bot: покупка, напоминания, истечение", "complexity": "aiogram 3"}, {"task": "Аналитика продаж", "solution": "Дашборд: конверсии, активность, выручка", "complexity": "Fin-analytics"}]' />
 
-## Фрагменты кода
+## Ключевые интеграции
 
-<CodeSnippet
-  language="python"
-  filename="main.py"
-  code="from fastapi import FastAPI, Depends, HTTPException\n\ndef verify_telegram_hash(user_hash: str):\n    if not user_hash: raise HTTPException(status_code=401, detail='Unauthorized')\n    return user_id"
-/>
+**Kinescope (DRM-видео)** — видео загружаются на Kinescope CDN. Backend генерирует подписанный
+`embed_url` с email-водяным знаком пользователя. Прямое скачивание и стриминг напрямую —
+заблокированы.
 
-## Скриншоты
+**Prodamus (оплатa)** — российская платёжная система, поддерживает ИП и самозанятых.
+При успешной оплате Prodamus присылает `webhook` с HMAC-подписью: сервер верифицирует
+подпись, создаёт запись в `purchases`, открывает доступ к курсу, отправляет уведомление
+в Telegram.
 
-<Screenshots images='[{"src": "/images/projects/lms-lucy-nails/dashboard.webp", "alt": "Дашборд Студента"}, {"src": "/images/projects/lms-lucy-nails/admin.webp", "alt": "Панель управления курсами"}]' />
-
-<CaseCTA />
+**Telegram Bot** — привязка аккаунта к платформе, уведомление о покупке, напоминания
+за 3 дня и за 1 день до окончания доступа. Для тарифа «С поддержкой» — ссылка на закрытую
+группу с куратором.

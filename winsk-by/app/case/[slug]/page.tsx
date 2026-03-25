@@ -6,7 +6,19 @@ import { mdxComponents } from '@/components/case/mdx-components';
 import { getProjectBySlug, projects } from '@/data/projects';
 import { CaseHero } from '@/components/case/CaseHero';
 import { CaseNavigation } from '@/components/case/CaseNavigation';
-import { CaseCallToAction } from '@/components/case/CaseCallToAction';
+import { CaseCTA } from '@/components/case/CaseCTA';
+import { ModuleNav } from '@/components/case/ModuleNav';
+
+// Per-project sticky nav configs
+const MODULE_NAV_CONFIG: Record<string, { id: string; label: string }[]> = {
+    'ai-ecosystem': [
+        { id: 'module-1', label: '01 · Scraper' },
+        { id: 'module-2', label: '02 · Generator' },
+        { id: 'module-3', label: '03 · Tagger' },
+        { id: 'module-4', label: '04 · SaaS' },
+        { id: 'module-5', label: '05 · Automation' },
+    ],
+};
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -39,14 +51,20 @@ export default async function CasePage({ params }: PageProps) {
         return notFound();
     }
 
-    // Find prev/next for navigation
-    const currentIndex = projects.findIndex(p => p.slug === slug);
-    const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : undefined;
-    const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : undefined;
+    // Find prev/next for navigation (sorted by display order)
+    const orderedProjects = [...projects].sort((a, b) => a.order - b.order);
+    const currentIndex = orderedProjects.findIndex(p => p.slug === slug);
+    const prevProject = currentIndex > 0 ? orderedProjects[currentIndex - 1] : undefined;
+    const nextProject = currentIndex < orderedProjects.length - 1 ? orderedProjects[currentIndex + 1] : undefined;
 
     return (
         <article className="min-h-screen">
             <CaseHero project={project} />
+
+            {/* Sticky per-module navigator (client island) */}
+            {MODULE_NAV_CONFIG[slug] && (
+                <ModuleNav modules={MODULE_NAV_CONFIG[slug]} />
+            )}
 
             <div className="max-w-[800px] mx-auto px-6 py-12">
                 <div className="prose prose-invert prose-p:text-[var(--color-text-secondary)] max-w-none">
@@ -57,7 +75,7 @@ export default async function CasePage({ params }: PageProps) {
                     />
                 </div>
 
-                <CaseCallToAction />
+                <CaseCTA />
 
                 <CaseNavigation prev={prevProject} next={nextProject} />
             </div>
