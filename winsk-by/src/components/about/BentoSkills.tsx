@@ -204,10 +204,10 @@ function MiniTerminal() {
     }, []);
 
     const terminalLines = [
-        { type: "command", text: "System.update_knowledge(--force)" },
-        { type: "success", label: "[OK]", text: "Core_Focus: AI-Agent Orchestration, Multi-Agent Systems." },
-        { type: "success", label: "[OK]", text: "Protocols: MCP (Model Context Protocol), Advanced RAG." },
-        { type: "status", text: "Integrating neural pathways..." }
+        { type: "command", text: "Engineer.learn(task, --on-demand)" },
+        { type: "success", label: "[OK]", text: "Obstacle detected → research → solution found." },
+        { type: "success", label: "[OK]", text: "New stack? Time-to-productive: ~hours, not weeks." },
+        { type: "status", text: "Iterating..." }
     ];
 
     return (
@@ -285,14 +285,14 @@ export function BentoSkills() {
             >
                 <motion.div style={{ y: y1 }} className="md:col-span-2">
                     <SkillCard
-                        title="Hard Skills | AI-Driven Development"
-                        description="Создаю AI-системы, которые реально работают в продакшене: подключаю языковые модели к данным бизнеса через API и RAG, выстраиваю цепочки из нескольких AI-агентов и слежу, чтобы всё было надёжным и измеримым."
-                        tags={["System Architecture", "Python", "API Integrations", "MCP", "RAG", "Git"]}
+                        title="Stack | Работаю с тем, что нужно"
+                        description="Не знаю всё — знаю, как найти и применить. Подключаю языковые модели к данным через API и RAG, выстраиваю AI-агентные цепочки, разбираюсь с новым стеком по ходу задачи. Если что-то не знакомо — это просто следующий шаг, не блокер."
+                        tags={["Python", "Node.js", "API Integrations", "RAG", "MCP", "Git"]}
                         className="h-full"
                         accentColor="#10B981"
                     >
                         <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mt-4 mb-2">
-                            Проектирую масштабируемые бекенд-сервисы на Node.js и Python. Особое внимание уделяю архитектуре, строгой типизации и скорости работы API. Покрываю код тестами, настраиваю CI/CD пайплайны и мониторинг для отказоустойчивой работы в продакшене.
+                            Умею строить рабочие решения из доступных инструментов: от простых скриптов до многокомпонентных AI-систем. Подход прост: сначала понять задачу, потом найти правильный путь — и дойти до результата.
                         </p>
                         <AIPipelineVisualizer />
                     </SkillCard>
@@ -320,9 +320,9 @@ export function BentoSkills() {
 
                 <motion.div style={{ y: y4 }} className="md:col-span-2">
                     <SkillCard
-                        title="Meta Skills | Эволюция"
-                        description="Каждый новый проект — повод обновить подходы. Слежу за новыми AI-моделями, фреймворками и способами автоматизации. Всё новое сначала тестирую на себе — потом внедряю клиентам."
-                        tags={["Continuous Learning", "Adaptability", "Agentic Workflows"]}
+                        title="Meta Skills | Учусь в процессе"
+                        description="Сильная сторона — не список технологий, а скорость разбора новых. Встретил незнакомое — исследовал, применил, пошёл дальше. Каждый проект расширяет стек. Слежу за AI-инструментами, тестирую на своих задачах, внедряю туда, где это даёт реальный эффект."
+                        tags={["Fast Learning", "Problem Decomposition", "Adaptability", "Agentic Workflows"]}
                         className="h-full"
                         accentColor="#F1F5F9"
                     >
