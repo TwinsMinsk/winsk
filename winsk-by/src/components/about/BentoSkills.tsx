@@ -285,14 +285,14 @@ export function BentoSkills() {
             >
                 <motion.div style={{ y: y1 }} className="md:col-span-2">
                     <SkillCard
-                        title="Stack | Работаю с тем, что нужно"
-                        description="Не знаю всё — знаю, как найти и применить. Подключаю языковые модели к данным через API и RAG, выстраиваю AI-агентные цепочки, разбираюсь с новым стеком по ходу задачи. Если что-то не знакомо — это просто следующий шаг, не блокер."
-                        tags={["Python", "Node.js", "API Integrations", "RAG", "MCP", "Git"]}
+                        title="Hard Skills | Технический стек"
+                        description="Python, Node.js, TypeScript, Next.js — не список для резюме, а инструменты из живых проектов. Подключаю модели к данным через API и RAG, выстраиваю AI-агентные цепочки, разворачиваю фронтенд и backend под задачу."
+                        tags={["Python", "Node.js", "TypeScript", "Next.js", "API Integrations", "RAG", "MCP", "Git"]}
                         className="h-full"
                         accentColor="#10B981"
                     >
                         <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mt-4 mb-2">
-                            Умею строить рабочие решения из доступных инструментов: от простых скриптов до многокомпонентных AI-систем. Подход прост: сначала понять задачу, потом найти правильный путь — и дойти до результата.
+                            Умею строить рабочие решения из доступных инструментов: от простых скриптов до многокомпонентных архитектур. Подход прост: сначала понять задачу, потом найти правильный технологический путь — и дойти до результата.
                         </p>
                         <AIPipelineVisualizer />
                     </SkillCard>
@@ -321,7 +321,7 @@ export function BentoSkills() {
                 <motion.div style={{ y: y4 }} className="md:col-span-2">
                     <SkillCard
                         title="Meta Skills | Учусь в процессе"
-                        description="Сильная сторона — не список технологий, а скорость разбора новых. Встретил незнакомое — исследовал, применил, пошёл дальше. Каждый проект расширяет стек. Слежу за AI-инструментами, тестирую на своих задачах, внедряю туда, где это даёт реальный эффект."
+                        description="Сильна не база, а скорость разбора новых вводных: не знаю всё — знаю, как найти и применить. Встретил незнакомое — исследовал, интегрировал, пошёл дальше. Это мой основной рычаг: время от «не слышал о таком» до «развернул решение» составляет часы, а не недели."
                         tags={["Fast Learning", "Problem Decomposition", "Adaptability", "Agentic Workflows"]}
                         className="h-full"
                         accentColor="#F1F5F9"
