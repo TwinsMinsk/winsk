@@ -9,7 +9,7 @@ Brand core: Terminal Decode animation — `> Location: Minsk` → glitch → `> 
 **Key docs (always read before major changes):**
 - `./Docs/PRD-Winsk-by.md` — Product requirements, personas, KPIs
 - `./Docs/TechSpec-Winsk-by.md` — Architecture, data types, animation specs
-- `./Docs/master-claude-portfolio.md` — Content source for all 6 project cases
+- `./Docs/master-claude-portfolio.md` — Content source for all 5 project cases
 
 ---
 
@@ -149,6 +149,32 @@ For any **new major feature** (new page, new animation system, new third-party i
 ```
 
 **Do not skip step 3.** Even if the plan seems obvious.
+
+---
+
+## Skill Selection Protocol
+
+Before starting any non-trivial task, scan the task description against the trigger table below.
+If a match is found — **read the corresponding `SKILL.md` first**, then execute.
+If multiple skills match — read all relevant `SKILL.md` files before starting.
+
+| Trigger Keywords / Task Type | Skill to Load |
+|------------------------------|---------------|
+| Создать/обновить MDX-кейс, парсинг контента, структура кейс-страницы | `.agent/skills/mdx-portfolio-integration/SKILL.md` |
+| Анимация, глитч, скрамблинг текста, Terminal Decode, typewriter-эффект | `.agent/skills/terminal-glitch-animation/SKILL.md` |
+| Tailwind CSS, токены дизайна, `@theme`, container queries, утилиты | `.agent/skills/tailwind-patterns/SKILL.md` |
+| Next.js, App Router, Server Components, RSC, data fetching, routing | `.agent/skills/nextjs-best-practices/SKILL.md` |
+| UI-компоненты из Stitch, конвертация дизайна в React | `.agent/skills/react-components/SKILL.md` |
+| Stitch-проект, итеративная UI-генерация, baton-passing loop | `.agent/skills/stitch-loop/SKILL.md` |
+| Создание/анализ DESIGN.md, дизайн-система из Stitch | `.agent/skills/design-md/SKILL.md` |
+| Улучшение промпта для Stitch, UI-идея → готовый промпт | `.agent/skills/enhance-prompt/SKILL.md` |
+| shadcn/ui, установка компонентов, кастомизация shadcn | `.agent/skills/shadcn-ui/SKILL.md` |
+| Видео-воркфлоу, Remotion, walkthrough-видео из Stitch | `.agent/skills/remotion/SKILL.md` |
+
+**Rules:**
+- Never skip reading `SKILL.md` if a trigger matches — even if the task seems familiar.
+- If no skill matches, proceed with standard engineering judgment from `GEMINI.md`.
+- After reading `SKILL.md`, follow its instructions **exactly** for that task.
 
 ---
 
